@@ -4,6 +4,20 @@
   width: 650px;
 }
 
+.description {
+  display: flex;
+}
+
+.description a img {
+  margin: 10px;
+  max-height: 300px;
+  max-width: 300px;
+}
+
+.description p {
+  flex-grow: 1;
+}
+
 #greeting-container {
   margin-top: 20px;
 }
