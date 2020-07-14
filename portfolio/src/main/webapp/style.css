@@ -38,7 +38,7 @@
   max-width: 300px;
 }
 
-.description p {
+.description .text {
   flex-grow: 1;
 }
 
