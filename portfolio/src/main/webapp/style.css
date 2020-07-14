@@ -1,9 +1,29 @@
+body {
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-top: 0px;
+  font-family: "Segoe UI", "Roboto", "Oxygen-Sans", "Ubuntu", "Cantarell", "Helvetica Neue", sans-serif;
+  background-color: darkgrey;
+}
+
+h1 {
+  font-weight: normal;
+}
+
+h2 {
+  font-weight: normal;
+}
+
+h3 {
+  font-weight: normal;
+}
+
 .header {
-  background-color: grey;
   height: fit-content;
   display: inline-block;
   width: 100%;
   position: relative;
+  background-color: #7c4dff;
 }
 
 .header h1 {
@@ -11,6 +31,7 @@
   margin-top: 8px;
   margin-bottom: 8px;
   padding-left: 16px;
+  color: white;
 }
 
 .header h3 {
@@ -20,11 +41,14 @@
   padding-top: 12px;
   margin-top: 8px;
   margin-bottom: 8px;
+  font-weight: normal;
+  color: white;
 }
 
 #content {
   margin-left: auto;
   margin-right: auto;
+  margin-top: 32px;
   width: 650px;
 }
 
