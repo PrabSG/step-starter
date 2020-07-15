@@ -97,7 +97,7 @@ h3 {
   color: white;
 }
 
-#content {
+.content {
   margin-left: auto;
   margin-right: auto;
   padding-top: 16px;
@@ -184,7 +184,7 @@ h3 {
   animation-duration: 0.5s;
 }
 
-#portfolioModalCaption {
+.modal-caption {
   margin: auto;
   display: block;
   width: 75%;
