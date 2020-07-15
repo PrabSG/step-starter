@@ -3,7 +3,7 @@ body {
   margin-right: 0px;
   margin-top: 0px;
   font-family: "Segoe UI", "Roboto", "Oxygen-Sans", "Ubuntu", "Cantarell", "Helvetica Neue", sans-serif;
-  background-color: lightgrey;
+  background-color: #eceff1;
 }
 
 h1 {
@@ -91,10 +91,15 @@ h3 {
 }
 
 #content {
+  margin-top: -4px;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 32px;
-  width: 650px;
+  padding-top: 16px;
+  padding-left: 32px;
+  padding-right: 32px;
+  height: auto;
+  width: 664px;
+  background-color: white;
 }
 
 .description {
