@@ -116,6 +116,30 @@ h3 {
   flex-grow: 1;
 }
 
+.nav-button {
+  padding: 12px;
+  height: fit-content;
+  width: 160px;
+  background-color: #b47cff;
+  color: black;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.nav-button i {
+  flex: 0 1 16px;
+}
+
+.nav-link {
+  max-width: 128px;
+  word-wrap: break-word;
+  text-decoration: none;
+  color: inherit;
+  flex: 0 1 auto;
+}
+
 #greeting-container {
   margin-top: 20px;
 }
