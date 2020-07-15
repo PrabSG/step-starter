@@ -7,10 +7,12 @@
     <script src="script.js"></script>
     <script src="https://kit.fontawesome.com/cb6426b828.js" crossorigin="anonymous"></script>
   </head>
+
   <body>
     <div class="header">
       <h1>Prab's Portfolio</h1>
       <h3>Photos</h3>
+
       <div class="dropdown">
         <button class="drop-title">Links</button>
         <div class="drop-content">
@@ -29,6 +31,7 @@
         </div>
       </div>
     </div>
+
     <div id="content">
       <div class="description">
         <div class="text">
@@ -44,15 +47,36 @@
              I've taken (mostly on my Pixel 2xl).
           <p>Enjoy browsing my page!</p>
         </div>
-        <a href="./images/me_main.jpeg"><img src="./images/me_main.jpeg"/></a>
+
+        <img  id="profileImg"
+              src="./images/me_main.jpeg"
+              alt="Me"
+              onclick="openSimpleImageModal(
+                'profileImgModal',
+                'portfolioModalImg',
+                'portfolioModalCaption',
+                'profileImgModalClose',
+                './images/me_main.jpeg',
+                'A picture of me on a recent trip to Jaipur, India. This ' +
+                'was taken on the roof of City Palace.'
+              )"/>
       </div>
+
       <div class="nav-button">
         <i class="fas fa-angle-left fa-lg"></i>
         <a href="./pics.html" class="nav-link">Check out my favourite photos!</a>
       </div>
+
       <p>Click here to get a random message:</p>
       <button onclick="addRandomGreeting()">Hello</button>
       <div id="greeting-container"></div>
+
+      <!-- Profile Image Modal -->
+      <div id="profileImgModal" class="modal">
+        <span id="profileImgModalClose" class="close">&times;</span>
+        <img id="portfolioModalImg" class="modal-content">
+        <div id="portfolioModalCaption"></div>
+      </div>
     </div>
   </body>
 </html>
