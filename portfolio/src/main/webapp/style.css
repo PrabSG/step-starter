@@ -48,7 +48,6 @@ h3 {
 
 .dropdown {
   position: relative;
-  display: inline-block;
   float: right;
   margin-top: 8px;
   padding-bottom: 12px;
@@ -71,7 +70,7 @@ h3 {
   color: white;
 }
 
-.drop-content a:hover {
+.drop-content .drop-item:hover {
   background-color: #3f1dcb;
 }
 
@@ -88,6 +87,15 @@ h3 {
   color: white;
   border: none;
   outline: none;
+}
+
+.drop-item {
+  padding-left: 8px;
+  padding-right: 8px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  color: white;
 }
 
 #content {
@@ -114,6 +122,30 @@ h3 {
 
 .description .text {
   flex-grow: 1;
+}
+
+.nav-button {
+  padding: 12px;
+  height: fit-content;
+  width: 160px;
+  background-color: #b47cff;
+  color: black;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.nav-button i {
+  flex: 0 1 16px;
+}
+
+.nav-link {
+  max-width: 128px;
+  word-wrap: break-word;
+  text-decoration: none;
+  color: inherit;
+  flex: 0 1 auto;
 }
 
 #greeting-container {
