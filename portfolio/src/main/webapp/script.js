@@ -26,3 +26,21 @@ function addRandomGreeting() {
   const greetingContainer = document.getElementById('greeting-container');
   greetingContainer.innerText = greeting;
 }
+
+/**
+ * Opens a modal with the given image and caption.
+ */
+function openSimpleImageModal(modalId, modalImgId, captionId, closeId, imgSrc, captionText) {  
+  var modal = document.getElementById(modalId);
+  var modalImg = document.getElementById(modalImgId);
+  var caption = document.getElementById(captionId);
+
+  modal.style.display = "block";
+  modalImg.src = imgSrc;
+  caption.innerHTML = captionText;
+
+  var closeBtn = document.getElementById(closeId);
+  closeBtn.onclick = function() {
+    modal.style.display = "none";
+  };
+}
