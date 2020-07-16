@@ -218,3 +218,60 @@ h3 {
 }
 
 /* Picture Slideshow */
+
+.slides-container {
+  position: relative;
+}
+
+.slide-pic {
+  display: none;
+}
+
+.slide-pic img {
+  width: 100%;
+}
+
+.prev-slide,
+.next-slide {
+  color: white;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: bold;
+  margin: -50px 0 0 0;
+  padding: 16px;
+  position: absolute;
+  top: 50%;
+  -webkit-user-select: none;
+  width: auto;
+}
+
+.prev-slide {
+  border-radius: 0 3px 3px 0;
+  left: 0;
+}
+
+.next-slide {
+  border-radius: 3px 0 0 3px;
+  right: 0;
+}
+
+.prev-slide:hover,
+.next-slide:hover {
+  background-color: rgba(0,0,0, .6);
+}
+
+.slide-counter {
+  color: #f2f2f2;
+  font-size: 14px;
+  left: 50%;
+  padding: 8px 0;
+  position: absolute;
+  top: 0;
+}
+
+.slide-caption-container {
+  background-color: #616161;
+  color: white;
+  padding: 2px 16px;
+  text-align: center;
+}
