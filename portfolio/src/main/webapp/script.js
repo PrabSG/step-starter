@@ -44,3 +44,43 @@ function openSimpleImageModal(modalId, modalImgId, captionId, closeId, imgSrc, c
     modal.style.display = "none";
   };
 }
+
+/**
+ * Advance or Reverse the slide currently showing.
+ */
+function advanceSlides(n) {
+  currIndex += n;
+  currIndex = showSlidePicture(currIndex);
+};
+
+/**
+ * Show the image from the gallery at the given position.
+ */
+function showSlidePicture(n) {
+  const slides = document.getElementsByClassName("slide-pic");
+  const caption = document.getElementById("slide-caption");
+
+  let newIndex = n;
+  if (n >= slides.length) {
+    newIndex = 0;
+  }
+  if (n < 0) {
+    newIndex = slides.length - 1;
+  }
+  
+  for (let i = 0; i < slides.length; i++) {
+    slides[i].style.display = "none";
+  }
+
+  console.log(slides);
+  console.log(newIndex);
+  slides[newIndex].style.display = "block";
+  slides[newIndex].getElementsByClassName("slide-counter")[0].innerText =
+     (newIndex + 1).toString() + "/" + slides.length.toString();
+  caption.innerText = picCaptions[newIndex];
+
+  return newIndex;
+};
+
+let picCaptions = ["This is caption 1", "This is caption 2", "This is caption 3", "This is caption 4", "This is caption 5"]
+let currIndex = showSlidePicture(0);
