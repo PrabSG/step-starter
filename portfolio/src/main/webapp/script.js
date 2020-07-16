@@ -80,5 +80,16 @@ function showSlidePicture(n) {
   return newIndex;
 };
 
-let picCaptions = ["This is caption 1", "This is caption 2", "This is caption 3", "This is caption 4", "This is caption 5"]
+let picCaptions = [
+  "This was taken outside King's College Chapel in Cambridge last summer. I \
+    decided to take a scenic route and accidentally timed this photo with a \
+    cyclist going past.",
+  "IC A vs Birmingham B in the NHSF National Kabaddi Tournament earlier this \
+    year. I joined Kabaddi at Imperial this year and I am loving it!",
+  "A photo of the Marina Bay Sands Hotel in Singapore during one of its light \
+    shows, taken from across the bay.",
+  "A firebreather in the desert. Taken during a desert safari and dinner \
+    excursion when visiting Dubai.",
+  "A close-up of a flower in the Flower Dome of the Gardens By the Bay in \
+    Singapore."]
 let currIndex = showSlidePicture(0);
