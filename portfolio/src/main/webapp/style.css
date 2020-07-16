@@ -23,9 +23,26 @@ h3 {
 
 .header h1 {
   color: white;
+  height: min-content;
+}
+
+.main-link {
+  color: white;
   float: left;
+  font-size: 2em;
   margin: 8px 0 8px 0;
   padding: 0 0 0 16px;
+  text-decoration: none;
+}
+
+.sub-link {
+  color: white;
+  float: right;
+  font-size: 1.17em;
+  font-weight: normal;
+  margin: 8px 0;
+  padding: 12px 16px 8px 8px;
+  text-decoration: none;
 }
 
 .header h3 {
