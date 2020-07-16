@@ -72,8 +72,6 @@ function showSlidePicture(n) {
     slides[i].style.display = "none";
   }
 
-  console.log(slides);
-  console.log(newIndex);
   slides[newIndex].style.display = "block";
   slides[newIndex].getElementsByClassName("slide-counter")[0].innerText =
      (newIndex + 1).toString() + "/" + slides.length.toString();

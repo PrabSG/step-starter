@@ -220,6 +220,8 @@ h3 {
 /* Picture Slideshow */
 
 .slides-container {
+  background-color: #eceff1;
+  border-radius: 8px;
   position: relative;
 }
 
@@ -228,7 +230,10 @@ h3 {
 }
 
 .slide-pic img {
-  width: 100%;
+  display: block;
+  height: 400px;
+  margin: auto;
+  max-width: 100%;
 }
 
 .prev-slide,
@@ -271,6 +276,7 @@ h3 {
 
 .slide-caption-container {
   background-color: #616161;
+  border-radius: 8px;
   color: white;
   padding: 2px 16px;
   text-align: center;
