@@ -60,6 +60,11 @@ function showSlidePicture(n) {
   const slides = document.getElementsByClassName("slide-pic");
   const caption = document.getElementById("slide-caption");
 
+  // If not on pics.html document wil not contain any slide elements.
+  if (slides.length === 0) {
+    return n;
+  }
+
   let newIndex = n;
   if (n >= slides.length) {
     newIndex = 0;
