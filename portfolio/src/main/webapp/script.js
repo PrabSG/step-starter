@@ -31,15 +31,15 @@ function addRandomGreeting() {
  * Opens a modal with the given image and caption.
  */
 function openSimpleImageModal(modalId, modalImgId, captionId, closeId, imgSrc, captionText) {  
-  var modal = document.getElementById(modalId);
-  var modalImg = document.getElementById(modalImgId);
-  var caption = document.getElementById(captionId);
+  const modal = document.getElementById(modalId);
+  const modalImg = document.getElementById(modalImgId);
+  const caption = document.getElementById(captionId);
 
   modal.style.display = "block";
   modalImg.src = imgSrc;
-  caption.innerHTML = captionText;
+  caption.innerText = captionText;
 
-  var closeBtn = document.getElementById(closeId);
+  const closeBtn = document.getElementById(closeId);
   closeBtn.onclick = function() {
     modal.style.display = "none";
   };
@@ -84,6 +84,13 @@ function showSlidePicture(n) {
 
   return newIndex;
 };
+
+/**
+ * Initialise map for currently displayed image.
+ */
+function initMap() {
+
+}
 
 let picCaptions = [
   "This was taken outside King's College Chapel in Cambridge last summer. I \
