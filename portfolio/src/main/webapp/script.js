@@ -83,11 +83,11 @@ function showSlidePicture(n) {
  * Return correct index for a circular array.
  */
 function circularIndex(n, items) {
-  if (n < 0) {
-    return items.length - ((-n) % items.length);
-  } else {
-    return n % items.length;
+  while (n < 0) {
+    n += items.length;
   }
+
+  return n % items.length;
 }
 
 /**
