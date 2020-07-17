@@ -119,6 +119,6 @@ const picLocations = [
   {lat: 25.179, lng: 55.299},
   {lat: 1.284, lng: 103.865}
 ];
-const picZoom = [12, 12, 12, 10, 12]
+const picZoom = [15, 12, 15, 12, 15]
 
 let currIndex = showSlidePicture(0);

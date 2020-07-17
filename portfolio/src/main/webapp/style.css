@@ -97,7 +97,7 @@ h3 {
   background-color: white;
   flex: 1 1 auto;
   margin: 0 auto;
-  padding: 16px 32px;
+  padding: 16px 32px 32px 32px;
   width: 640px;
 }
 
