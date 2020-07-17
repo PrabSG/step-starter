@@ -73,8 +73,8 @@ function showSlidePicture(n) {
     newIndex = slides.length - 1;
   }
   
-  for (let i = 0; i < slides.length; i++) {
-    slides[i].style.display = "none";
+  for (let slide of slides) {
+    slide.style.display = "none";
   }
 
   slides[newIndex].style.display = "block";
