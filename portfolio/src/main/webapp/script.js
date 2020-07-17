@@ -66,16 +66,10 @@ function showSlidePicture(n) {
     return n;
   }
 
-  let newIndex = n;
-  if (n >= slides.length) {
-    newIndex = 0;
-  }
-  if (n < 0) {
-    newIndex = slides.length - 1;
-  }
+  let newIndex = circularIndex(n, slides);
   
-  for (let i = 0; i < slides.length; i++) {
-    slides[i].style.display = 'none';
+  for (let slide of slides) {
+    slide.style.display = "none";
   }
 
   slides[newIndex].style.display = 'block';
@@ -85,6 +79,17 @@ function showSlidePicture(n) {
 
   return newIndex;
 };
+
+/**
+ * Return correct index for a circular array.
+ */
+function circularIndex(n, items) {
+  while (n < 0) {
+    n += items.length;
+  }
+
+  return n % items.length;
+}
 
 /**
  * Initialise map for currently displayed image.
