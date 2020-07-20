@@ -1,10 +1,6 @@
 describe('Slide Pictures', () => {
   
-  let items = []
-  
-  beforeEach(() => {
-    items = [0, 1, 2, 3];
-  })
+  let items = [0, 1, 2, 3];
 
   it('returns valid index', () => {
       expect(circularIndex(3, items))
