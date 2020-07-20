@@ -28,6 +28,17 @@ function addRandomGreeting() {
 }
 
 /**
+ * Fetches a greeting determined by the backend servlet.
+ */
+function getGreeting() {
+  fetch('/data')
+    .then(response => response.text())
+    .then(message => {
+      document.getElementById('page-greeting').innerText = message;
+    })
+}
+
+/**
  * Opens a modal with the given image and caption.
  */
 function openSimpleImageModal(modalId, modalImgId, captionId, closeId, imgSrc, captionText) {  
