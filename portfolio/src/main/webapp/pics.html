@@ -4,9 +4,52 @@
     <meta charset="UTF-8">
     <title>Prab's Portfolio</title>
     <link rel="stylesheet" href="style.css">
-    <script src="script.js"></script>
+    <script src="https://kit.fontawesome.com/cb6426b828.js" crossorigin="anonymous"></script>
   </head>
   <body>
-      <p>Hello World!</p>
+    <div class="header">
+      <a href="./index.html" class="main-link">Prab's Portfolio</a>
+      <a href="./pics.html" class="sub-link">Photos</a>
+
+      <div class="dropdown">
+        <button class="drop-title">Links</button>
+        <div class="drop-content">
+          <div class="drop-item">
+            <i class="fab fa-linkedin fa-lg"></i>
+            <a href="https://linkedin.com/in/prabhjot-s-grewal" target="_blank">LinkedIn</a>
+          </div>
+          <div class="drop-item">
+            <i class="fab fa-github fa-lg"></i>
+            <a href="https://github.com/PrabSG" target="_blank">Github</a>
+          </div>
+          <div class="drop-item">
+            <i class="fas fa-terminal fa-sm"></i>
+            <a href="https://prabsg.dev" target="_blank">My Dev Website</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+      <h1>Photo Gallery</h1>
+      <p>I have taken my Pixel all over the world to some interesting places, and now armed with a mirrorless camera too (Sony A7iii), I have started to take photography a bit more seriously.</p>
+      <p>This is a small selection of some of my favourite photos that I have taken.</p>
+
+      <!-- Slideshow of images -->
+      <div class="slides-container">
+
+        <!-- Pictures dynamically generated here -->
+
+        <a class="next-slide" onclick="advanceSlides(1)">&#10095;</a>
+        <a class="prev-slide" onclick="advanceSlides(-1)">&#10094;</a>
+
+        <div class="slide-caption-container">
+          <p id="slide-caption"></p>
+        </div>
+
+      </div>
+    </div>
+
+    <script src="script.js"></script>
   </body>
 </html>
