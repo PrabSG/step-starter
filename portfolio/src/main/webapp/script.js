@@ -80,6 +80,7 @@ function setGalleryImages() {
 function advanceSlides(n) {
   currIndex += n;
   currIndex = showSlidePicture(currIndex);
+  initMap();
 };
 
 /**
@@ -104,7 +105,7 @@ function showSlidePicture(n) {
   
   caption.innerText = picData[newIndex].caption;
   slides[newIndex].getElementsByClassName('slide-counter')[0].innerText =
-     (newIndex + 1).toString() + "/" + slides.length.toString();
+     (newIndex + 1).toString() + '/' + slides.length.toString();
 
   return newIndex;
 };
@@ -124,7 +125,14 @@ function circularIndex(n, items) {
  * Initialise map for currently displayed image.
  */
 function initMap() {
+  let map = new google.maps.Map(
+    document.getElementById('map'),
+    {zoom: picData[currIndex].mapZoom, center: picData[currIndex].location}
+  )
 
+  let marker = new google.maps.Marker(
+    {position: picData[currIndex].location, map: map}
+  );
 }
 
 let picData = [
@@ -132,30 +140,40 @@ let picData = [
     imgSrc: './images/gallery_1.jpeg',
     caption: 'This was taken outside King\'s College Chapel in Cambridge ' +
       'last summer. I decided to take a scenic route and accidentally timed ' +
-      'this photo with a cyclist going past.'
+      'this photo with a cyclist going past.',
+    location: {lat: 52.204, lng: 0.117},
+    mapZoom: 12
   },
   {
     imgSrc: './images/gallery_2.jpeg',
     caption: 'IC A vs Birmingham B in the NHSF National Kabaddi Tournament ' +
       'earlier this year. I joined Kabaddi at Imperial this year and I am ' +
-      'loving it!'
+      'loving it!',
+    location: {lat: 52.546, lng: -2.052},
+    mapZoom: 12
   },
   {
     imgSrc: './images/gallery_3.jpeg',
     caption: 'A photo of the Marina Bay Sands Hotel in Singapore during one ' +
-      'of its light shows, taken from across the bay.'
+      'of its light shows, taken from across the bay.',
+    location: {lat: 1.285, lng: 103.854},
+    mapZoom: 12
   },
   {
     imgSrc: './images/gallery_4.jpeg',
     caption: 'A firebreather in the desert. Taken during a desert safari ' +
-      'and dinner excursion when visiting Dubai.'
+      'and dinner excursion when visiting Dubai.',
+    location: {lat: 25.179, lng: 55.299},
+    mapZoom: 10
   },
   {
     imgSrc: './images/gallery_5.jpeg',
     caption: 'A close-up of a flower in the Flower Dome of the Gardens By ' +
-      'the Bay in Singapore.'
+      'the Bay in Singapore.',
+    location: {lat: 1.284, lng: 103.865},
+    mapZoom: 12
   }
-]
+];
 
 setGalleryImages();
 let currIndex = showSlidePicture(0);
