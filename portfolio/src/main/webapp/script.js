@@ -62,7 +62,7 @@ function setGalleryImages() {
     return;
   }
 
-  for (pic of picData) {
+  for (const pic of picData) {
     const slidePic = document.createElement('div');
     slidePic.className = 'slide-pic';
 
@@ -100,9 +100,9 @@ function showSlidePicture(n) {
     return n;
   }
 
-  let newIndex = circularIndex(n, slides);
+  const newIndex = circularIndex(n, slides);
   
-  for (let slide of slides) {
+  for (const slide of slides) {
     slide.style.display = 'none';
   }
 
@@ -130,17 +130,17 @@ function circularIndex(n, items) {
  * Initialise map for currently displayed image.
  */
 function initMap() {
-  let map = new google.maps.Map(
+  const map = new google.maps.Map(
     document.getElementById('map'),
     {zoom: picData[currIndex].mapZoom, center: picData[currIndex].location}
   )
 
-  let marker = new google.maps.Marker(
+  const marker = new google.maps.Marker(
     {position: picData[currIndex].location, map: map}
   );
 }
 
-let picData = [
+const picData = [
   {
     imgSrc: './images/gallery_1.jpeg',
     caption: 'This was taken outside King\'s College Chapel in Cambridge ' +
