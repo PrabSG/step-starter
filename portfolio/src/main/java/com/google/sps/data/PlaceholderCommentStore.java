@@ -22,7 +22,7 @@ public class PlaceholderCommentStore implements CommentStore {
   }
 
   @Override
-  public boolean post() {
+  public boolean post(Comment comment) {
     return true;
   }
 }

@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface CommentStore {
     List<String> getComments();
-    boolean post();
+    boolean post(Comment comment);
 }
