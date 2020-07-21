@@ -74,8 +74,33 @@
         <a href="./pics.html" class="nav-link">Check out my favourite photos!</a>
       </div>
 
-      <h2>Comments:</h2>
-      <div id="comment-section"></div>
+      <div class="section-header">
+        <h2 id="commentTitle">Comments:</h2>
+
+        <div id="postBtn"
+             onclick="openModal('postCommentModal', 'postCommentModalClose')">
+          <i class="fas fa-edit"></i>
+        </div>
+      </div>
+      
+      <!-- Post Comment Modal -->
+      <div id="postCommentModal" class="modal">
+        <span id="postCommentModalClose" class="close">&times;</span>
+        <form action="/data" method="POST" class="modal-content modal-form">
+          <h2>Post a new Comment</h2>
+          <p>Name:</p>
+          <input type="text" name="name">
+          <br/>
+          
+          <p>Comment:</p>
+          <textarea name="comment" rows="8" cols="80"></textarea>
+          <br/>
+          
+          <input type="submit" />
+        </form>
+      </div>
+
+      <div id="commentSection"></div>
     </div>
   </body>
 </html>

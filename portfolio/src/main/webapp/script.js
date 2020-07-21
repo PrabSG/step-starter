@@ -19,7 +19,7 @@ function getComments() {
   fetch('/data')
     .then(response => response.json())
     .then(comments => {
-      const section = document.getElementById('comment-section');
+      const section = document.getElementById('commentSection');
       
       for (comment of comments) {
         const post = document.createElement('p');
@@ -31,21 +31,29 @@ function getComments() {
 }
 
 /**
- * Opens a modal with the given image and caption.
+ * Opens a modal and configures close button.
  */
-function openSimpleImageModal(modalId, modalImgId, captionId, closeId, imgSrc, captionText) {  
+function openModal(modalId, closeId) {
   const modal = document.getElementById(modalId);
-  const modalImg = document.getElementById(modalImgId);
-  const caption = document.getElementById(captionId);
-
   modal.style.display = 'block';
-  modalImg.src = imgSrc;
-  caption.innerText = captionText;
 
   const closeBtn = document.getElementById(closeId);
   closeBtn.onclick = function() {
     modal.style.display = 'none';
   };
+}
+
+/**
+ * Opens a modal with the given image and caption.
+ */
+function openSimpleImageModal(modalId, modalImgId, captionId, closeId, imgSrc, captionText) {  
+  openModal(modalId, closeId);
+
+  const modalImg = document.getElementById(modalImgId);
+  const caption = document.getElementById(captionId);
+
+  modalImg.src = imgSrc;
+  caption.innerText = captionText;
 }
 
 /**
