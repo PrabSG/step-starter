@@ -23,12 +23,17 @@ function getComments() {
     .then(comments => {
       const section = document.getElementById('commentSection');
       
-      for (const comment of comments) {
+      comments.forEach(comment => {
         const post = document.createElement('p');
-        post.innerText = comment;
+        post.innerText = comment.comment;
+
+        const author = document.createElement('p');
+        author.innerText = 'Posted by ' + comment.name;
 
         section.appendChild(post);
-      }
+        section.appendChild(author);
+        section.appendChild(document.createElement('br'));
+      })
     });
 }
 
