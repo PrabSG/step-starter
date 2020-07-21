@@ -8,7 +8,7 @@
     <script src="https://kit.fontawesome.com/cb6426b828.js" crossorigin="anonymous"></script>
   </head>
 
-  <body>
+  <body onload="getComments()">
     <div class="header">
       <a href="./index.html" class="main-link">Prab's Portfolio</a>
       <a href="./pics.html" class="sub-link">Photos</a>
@@ -35,7 +35,7 @@
     <div class="content">
       <div class="description">
         <div class="text">
-          <h2>Hi there!</h2>
+          <h2>Hi, its me Prab!</h2>
           <p>This is my personal portfolio, giving you a glimpse into who
              I am and what I like to spend my time doing.</p>
           <p>I am a student at Imperial College London, and this is my first 
@@ -62,21 +62,20 @@
               )">
       </div>
 
-      <div class="nav-button">
-        <i class="fas fa-angle-left fa-lg"></i>
-        <a href="./pics.html" class="nav-link">Check out my favourite photos!</a>
-      </div>
-
-      <p>Click here to get a random message:</p>
-      <button onclick="addRandomGreeting()">Hello</button>
-      <div id="greeting-container"></div>
-
       <!-- Profile Image Modal -->
       <div id="profileImgModal" class="modal">
         <span id="profileImgModalClose" class="close">&times;</span>
         <img id="portfolioModalImg" class="modal-content">
         <div id="portfolioModalCaption" class="modal-caption"></div>
       </div>
+
+      <div class="nav-button">
+        <i class="fas fa-angle-left fa-lg"></i>
+        <a href="./pics.html" class="nav-link">Check out my favourite photos!</a>
+      </div>
+
+      <h2>Comments:</h2>
+      <div id="comment-section"></div>
     </div>
   </body>
 </html>

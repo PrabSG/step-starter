@@ -12,19 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+"use strict";
+
 /**
- * Adds a random greeting to the page.
+ * Fetches comments stored in backend servlet.
  */
-function addRandomGreeting() {
-  const greetings =
-      ['Hello world!', '¡Hola Mundo!', '你好，世界！', 'Bonjour le monde!'];
+function getComments() {
+  fetch('/data')
+    .then(response => response.json())
+    .then(comments => {
+      const section = document.getElementById('comment-section');
+      
+      for (const comment of comments) {
+        const post = document.createElement('p');
+        post.innerText = comment;
 
-  // Pick a random greeting.
-  const greeting = greetings[Math.floor(Math.random() * greetings.length)];
-
-  // Add it to the page.
-  const greetingContainer = document.getElementById('greeting-container');
-  greetingContainer.innerText = greeting;
+        section.appendChild(post);
+      }
+    });
 }
 
 /**
@@ -57,7 +62,7 @@ function setGalleryImages() {
     return;
   }
 
-  for (pic of picData) {
+  for (const pic of picData) {
     const slidePic = document.createElement('div');
     slidePic.className = 'slide-pic';
 
@@ -95,9 +100,9 @@ function showSlidePicture(n) {
     return n;
   }
 
-  let newIndex = circularIndex(n, slides);
+  const newIndex = circularIndex(n, slides);
   
-  for (let slide of slides) {
+  for (const slide of slides) {
     slide.style.display = 'none';
   }
 
@@ -125,17 +130,17 @@ function circularIndex(n, items) {
  * Initialise map for currently displayed image.
  */
 function initMap() {
-  let map = new google.maps.Map(
+  const map = new google.maps.Map(
     document.getElementById('map'),
     {zoom: picData[currIndex].mapZoom, center: picData[currIndex].location}
   )
 
-  let marker = new google.maps.Marker(
+  const marker = new google.maps.Marker(
     {position: picData[currIndex].location, map: map}
   );
 }
 
-let picData = [
+const picData = [
   {
     imgSrc: './images/gallery_1.jpeg',
     caption: 'This was taken outside King\'s College Chapel in Cambridge ' +
