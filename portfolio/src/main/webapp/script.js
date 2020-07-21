@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+"use strict";
+
 /**
  * Fetches comments stored in backend servlet.
  */
@@ -21,7 +23,7 @@ function getComments() {
     .then(comments => {
       const section = document.getElementById('comment-section');
       
-      for (comment of comments) {
+      for (const comment of comments) {
         const post = document.createElement('p');
         post.innerText = comment;
 
