@@ -14,14 +14,24 @@
 
 "use strict";
 
+function getCommentLimit() {
+  const selector = document.getElementById('commentLimitSelect');
+  return selector.options[selector.selectedIndex].value;
+}
+
 /**
  * Fetches comments stored in backend servlet.
  */
 function getComments() {
-  fetch('/data')
+  const limit = getCommentLimit();
+
+  fetch(`/data?limit=${limit}`)
     .then(response => response.json())
     .then(comments => {
       const section = document.getElementById('commentSection');
+
+      // Clear old comments to insert new comments.
+      section.innerHTML = '';
       
       comments.forEach(comment => {
         const post = document.createElement('p');
