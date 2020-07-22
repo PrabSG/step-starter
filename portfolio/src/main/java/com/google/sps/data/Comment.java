@@ -3,12 +3,15 @@ package com.google.sps.data;
 public class Comment {
   private final String name;
   private final String comment;
-  private final long timestamp;
+  /**
+   * Timestamp in milliseconds according to epoch/unix time.
+   * */
+  private final long timestampMillis;
 
-  public Comment(String name, String comment, long timestamp) {
+  public Comment(String name, String comment, long timestampMillis) {
     this.name = name;
     this.comment = comment;
-    this.timestamp = timestamp;
+    this.timestampMillis = timestampMillis;
   }
 
   public Comment (String name, String comment) {
@@ -31,7 +34,7 @@ public class Comment {
     return this.comment;
   }
 
-  public long getTimestamp() {
-    return this.timestamp;
+  public long getTimestampMillis() {
+    return this.timestampMillis;
   }
 }

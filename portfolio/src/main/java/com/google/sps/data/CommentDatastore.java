@@ -27,7 +27,7 @@ public class CommentDatastore implements CommentStore {
 
   @Override
   public List<Comment> getComments() {
-    Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
+    Query query = new Query("Comment").addSort("timestampMillis", SortDirection.DESCENDING);
     PreparedQuery results = datastore.prepare(query);
 
     List<Comment> comments = new ArrayList<>();
@@ -35,7 +35,7 @@ public class CommentDatastore implements CommentStore {
     for (Entity entity : results.asIterable()) {
       Comment comment = new Comment((String) entity.getProperty("name"),
           (String) entity.getProperty("comment"),
-          (long) entity.getProperty("timestamp"));
+          (long) entity.getProperty("timestampMillis"));
 
       comments.add(comment);
     }
@@ -53,7 +53,7 @@ public class CommentDatastore implements CommentStore {
     Entity commentEntity = new Entity("Comment");
     commentEntity.setProperty("name", comment.getName());
     commentEntity.setProperty("comment", comment.getComment());
-    commentEntity.setProperty("timestamp", comment.getTimestamp());
+    commentEntity.setProperty("timestampMillis", comment.getTimestampMillis());
 
     datastore.put(commentEntity);
   }
