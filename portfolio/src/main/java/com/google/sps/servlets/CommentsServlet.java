@@ -26,8 +26,8 @@ import com.google.sps.data.CommentDatastore;
 import com.google.sps.data.CommentStore;
 
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
-@WebServlet("/data")
-public class DataServlet extends HttpServlet {
+@WebServlet("/comments")
+public class CommentsServlet extends HttpServlet {
 
   public static final int DEFAULT_COMMENT_LIMIT = 15;
 

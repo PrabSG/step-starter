@@ -25,7 +25,7 @@ function getCommentLimit() {
 function getComments() {
   const limit = getCommentLimit();
 
-  fetch(`/data?limit=${limit}`)
+  fetch(`/comments?limit=${limit}`)
     .then(response => response.json())
     .then(comments => {
       const section = document.getElementById('commentSection');
