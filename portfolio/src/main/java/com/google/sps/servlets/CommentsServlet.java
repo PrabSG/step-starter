@@ -25,7 +25,9 @@ import com.google.sps.data.Comment;
 import com.google.sps.data.CommentDatastore;
 import com.google.sps.data.CommentStore;
 
-/** Servlet that returns some example content. TODO: modify this file to handle comments data */
+/**
+ * Servlet that returns comments posted onto the portfolio page.
+ */
 @WebServlet("/comments")
 public class CommentsServlet extends HttpServlet {
 
@@ -53,7 +55,7 @@ public class CommentsServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String userName = getParameter(request, "name", "Anonymous");
-    String comment =  getParameter(request, "comment", "");
+    String comment = getParameter(request, "comment", "");
 
     store.post(new Comment(userName, comment));
 
