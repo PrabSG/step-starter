@@ -21,14 +21,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.sps.data.PlaceholderCommentStore;
+import com.google.sps.data.Comment;
+import com.google.sps.data.TemporaryCommentStore;
 import com.google.sps.data.CommentStore;
 
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
-  private CommentStore store = new PlaceholderCommentStore();
+  private CommentStore store = new TemporaryCommentStore();
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -36,5 +37,21 @@ public class DataServlet extends HttpServlet {
 
     Gson gson = new Gson();
     response.getWriter().println(gson.toJson(store.getComments()));
+  }
+
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    String userName = getParameter(request, "name", "Anonymous");
+    String comment =  getParameter(request, "comment", "");
+
+    store.post(new Comment(userName, comment));
+
+    response.sendRedirect("./index.html");
+  }
+
+  private String getParameter(HttpServletRequest request, String name, String defaultValue) {
+    String value = request.getParameter(name);
+
+    return (value != null) ? value : defaultValue;
   }
 }
