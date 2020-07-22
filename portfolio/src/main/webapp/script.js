@@ -14,6 +14,11 @@
 
 "use strict";
 
+const getCommentsURL = (limit) => `/comments?limit=${limit}`;
+const deleteAllCommentsURL = '/delete-comments';
+
+const STATUS_OK = 200;
+
 function getCommentLimit() {
   const selector = document.getElementById('commentLimitSelect');
   return selector.options[selector.selectedIndex].value;
@@ -25,7 +30,7 @@ function getCommentLimit() {
 function getComments() {
   const limit = getCommentLimit();
 
-  fetch(`/comments?limit=${limit}`)
+  fetch(getCommentsURL(limit))
     .then(response => response.json())
     .then(comments => {
       const section = document.getElementById('commentSection');
@@ -44,6 +49,22 @@ function getComments() {
         section.appendChild(author);
         section.appendChild(document.createElement('br'));
       })
+    });
+}
+
+/**
+ * Deletes all comments from backend and refreshes comments.
+ */
+function deleteAllComments() {
+  const options = {
+    method: 'POST'
+  }
+
+  fetch(deleteAllCommentsURL, options)
+    .then(response => {
+      if (response.status === STATUS_OK) {
+        getComments();
+      }
     });
 }
 

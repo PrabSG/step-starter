@@ -9,6 +9,7 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,7 +30,7 @@ public class CommentDatastore implements CommentStore {
 
   @Override
   public List<Comment> getComments() {
-    Query query = new Query("Comment").addSort("timestampMillis", SortDirection.DESCENDING);
+    Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
     PreparedQuery results = datastore.prepare(query);
 
     List<Comment> comments = new ArrayList<>();
@@ -37,7 +38,7 @@ public class CommentDatastore implements CommentStore {
     for (Entity entity : results.asIterable()) {
       Comment comment = new Comment((String) entity.getProperty("name"),
           (String) entity.getProperty("comment"),
-          (long) entity.getProperty("timestampMillis"));
+          Instant.ofEpochMilli((long) entity.getProperty("timestamp")));
 
       comments.add(comment);
     }
@@ -66,7 +67,7 @@ public class CommentDatastore implements CommentStore {
     Entity commentEntity = new Entity("Comment");
     commentEntity.setProperty("name", comment.getName());
     commentEntity.setProperty("comment", comment.getComment());
-    commentEntity.setProperty("timestampMillis", comment.getTimestampMillis());
+    commentEntity.setProperty("timestamp", comment.getTimestamp().toEpochMilli());
 
     datastore.put(commentEntity);
   }
