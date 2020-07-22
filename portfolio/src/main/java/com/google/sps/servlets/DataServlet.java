@@ -29,14 +29,25 @@ import com.google.sps.data.CommentStore;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
+  public static final int DEFAULT_COMMENT_LIMIT = 15;
+
   private CommentStore store = CommentDatastore.getInstance();
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    String limitString = getParameter(request, "limit", String.valueOf(DEFAULT_COMMENT_LIMIT));
+    int limit;
+
+    try {
+      limit = Integer.parseInt(limitString);
+    } catch (NumberFormatException e) {
+      limit = DEFAULT_COMMENT_LIMIT;
+    }
+
     response.setContentType("application/json;");
 
     Gson gson = new Gson();
-    response.getWriter().println(gson.toJson(store.getComments()));
+    response.getWriter().println(gson.toJson(store.getComments(limit)));
   }
 
   @Override

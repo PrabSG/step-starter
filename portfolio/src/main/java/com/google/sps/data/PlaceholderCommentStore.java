@@ -2,6 +2,7 @@ package com.google.sps.data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PlaceholderCommentStore implements CommentStore {
   private List<Comment> comments;
@@ -23,6 +24,11 @@ public class PlaceholderCommentStore implements CommentStore {
   @Override
   public List<Comment> getComments() {
     return comments;
+  }
+
+  @Override
+  public List<Comment> getComments(int limit) {
+    return comments.stream().limit(limit).collect(Collectors.toList());
   }
 
   @Override

@@ -9,6 +9,7 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CommentDatastore implements CommentStore {
 
@@ -40,6 +41,11 @@ public class CommentDatastore implements CommentStore {
     }
 
     return comments;
+  }
+
+  @Override
+  public List<Comment> getComments(int limit) {
+    return getComments().stream().limit(limit).collect(Collectors.toList());
   }
 
   @Override
