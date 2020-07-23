@@ -180,8 +180,8 @@ h3 {
 }
 
 .modal-content {
-  animation-name: zoom;
   animation-duration: .5s;
+  animation-name: zoom;
   border-radius: 8px;
   display: block;
   margin: auto;
@@ -318,6 +318,7 @@ h3 {
 }
 
 .slide-pic img {
+  cursor: pointer;
   display: block;
   height: 400px;
   margin: auto;

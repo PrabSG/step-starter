@@ -86,16 +86,20 @@ function openModal(modalId, closeId) {
   };
 }
 
-/**
- * Opens a modal with the given image and caption.
- */
-function openSimpleImageModal(modalId, modalImgId, captionId, closeId, imgSrc, captionText) {  
+function openSimpleImageModal(modalId, modalImgId, closeId, imgSrc) {
   openModal(modalId, closeId);
 
   const modalImg = document.getElementById(modalImgId);
-  const caption = document.getElementById(captionId);
-
   modalImg.src = imgSrc;
+}
+
+/**
+ * Opens a modal with the given image and caption.
+ */
+function openCaptionedImageModal(modalId, modalImgId, captionId, closeId, imgSrc, captionText) {  
+  openSimpleImageModal(modalId, modalImgId, closeId, imgSrc);
+
+  const caption = document.getElementById(captionId);
   caption.innerText = captionText;
 }
 
@@ -119,7 +123,13 @@ function setGalleryImages() {
     counter.className = 'slide-counter';
 
     const img = document.createElement('img');
-    img.src = pic.imgSrc;
+    img.src = getSmallFilePath(pic.imgSrc);
+    img.onclick = () => openSimpleImageModal(
+        'galleryModal',
+        'galleryModalImg',
+        'galleryModalClose',
+        pic.imgSrc
+    );
 
     slidePic.appendChild(counter);
     slidePic.appendChild(img);
@@ -163,6 +173,14 @@ function showSlidePicture(n) {
 
   return newIndex;
 };
+
+/**
+ * Function to manipulate image file path to compressed version.
+ * @param {string} path - file path to original image file.
+ */
+function getSmallFilePath(path) {
+  return path.replace('.jpeg', '_small.jpeg');
+}
 
 /**
  * Return correct index for a circular array.
