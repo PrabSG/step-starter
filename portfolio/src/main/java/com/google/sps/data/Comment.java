@@ -1,21 +1,20 @@
 package com.google.sps.data;
 
+import java.time.Instant;
+
 public class Comment {
   private final String name;
   private final String comment;
-  /**
-   * Timestamp in milliseconds according to epoch/unix time.
-   * */
-  private final long timestampMillis;
+  private final Instant timestamp;
 
-  public Comment(String name, String comment, long timestampMillis) {
+  public Comment(String name, String comment, Instant timestamp) {
     this.name = name;
     this.comment = comment;
-    this.timestampMillis = timestampMillis;
+    this.timestamp = timestamp;
   }
 
   public Comment (String name, String comment) {
-    this(name, comment, System.currentTimeMillis());
+    this(name, comment, Instant.now());
   }
 
   public Comment(String comment) {
@@ -34,7 +33,7 @@ public class Comment {
     return this.comment;
   }
 
-  public long getTimestampMillis() {
-    return this.timestampMillis;
+  public Instant getTimestamp() {
+    return this.timestamp;
   }
 }

@@ -14,14 +14,29 @@
 
 "use strict";
 
+const getCommentsURL = (limit) => `/comments?limit=${limit}`;
+const deleteAllCommentsURL = '/delete-comments';
+
+const STATUS_OK = 200;
+
+function getCommentLimit() {
+  const selector = document.getElementById('commentLimitSelect');
+  return selector.options[selector.selectedIndex].value;
+}
+
 /**
  * Fetches comments stored in backend servlet.
  */
 function getComments() {
-  fetch('/data')
+  const limit = getCommentLimit();
+
+  fetch(getCommentsURL(limit))
     .then(response => response.json())
     .then(comments => {
       const section = document.getElementById('commentSection');
+
+      // Clear old comments to insert new comments.
+      section.innerHTML = '';
       
       comments.forEach(comment => {
         const post = document.createElement('p');
@@ -34,6 +49,22 @@ function getComments() {
         section.appendChild(author);
         section.appendChild(document.createElement('br'));
       })
+    });
+}
+
+/**
+ * Deletes all comments from backend and refreshes comments.
+ */
+function deleteAllComments() {
+  const options = {
+    method: 'POST'
+  }
+
+  fetch(deleteAllCommentsURL, options)
+    .then(response => {
+      if (response.status === STATUS_OK) {
+        getComments();
+      }
     });
 }
 

@@ -86,7 +86,7 @@
       <!-- Post Comment Modal -->
       <div id="postCommentModal" class="modal">
         <span id="postCommentModalClose" class="close">&times;</span>
-        <form action="/data" method="POST" class="modal-content modal-form">
+        <form action="/comments" method="POST" class="modal-content modal-form">
           <h2>Post a new Comment</h2>
           <p>Name:</p>
           <input type="text" name="name">
@@ -100,7 +100,23 @@
         </form>
       </div>
 
+      <div class="view-selector">
+        <label for="commentLimitSelect">Number of comments visible:</label>
+        <select id="commentLimitSelect" onchange="getComments()">
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="15">15</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+        </select>
+      </div>
+
       <div id="commentSection"></div>
+
+      <div class="delete-btn" onclick="deleteAllComments()">
+        <i class="fas fa-trash-alt"></i>
+        Delete All Comments
+      </div>
     </div>
   </body>
 </html>

@@ -25,24 +25,37 @@ import com.google.sps.data.Comment;
 import com.google.sps.data.CommentDatastore;
 import com.google.sps.data.CommentStore;
 
-/** Servlet that returns some example content. TODO: modify this file to handle comments data */
-@WebServlet("/data")
-public class DataServlet extends HttpServlet {
+/**
+ * Servlet that returns comments posted onto the portfolio page.
+ */
+@WebServlet("/comments")
+public class CommentsServlet extends HttpServlet {
+
+  public static final int DEFAULT_COMMENT_LIMIT = 15;
 
   private CommentStore store = CommentDatastore.getInstance();
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    String limitString = getParameter(request, "limit", String.valueOf(DEFAULT_COMMENT_LIMIT));
+    int limit;
+
+    try {
+      limit = Integer.parseInt(limitString);
+    } catch (NumberFormatException e) {
+      limit = DEFAULT_COMMENT_LIMIT;
+    }
+
     response.setContentType("application/json;");
 
     Gson gson = new Gson();
-    response.getWriter().println(gson.toJson(store.getComments()));
+    response.getWriter().println(gson.toJson(store.getComments(limit)));
   }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String userName = getParameter(request, "name", "Anonymous");
-    String comment =  getParameter(request, "comment", "");
+    String comment = getParameter(request, "comment", "");
 
     store.post(new Comment(userName, comment));
 
