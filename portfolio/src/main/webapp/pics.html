@@ -43,11 +43,63 @@
         <a class="next-slide" onclick="advanceSlides(1)">&#10095;</a>
         <a class="prev-slide" onclick="advanceSlides(-1)">&#10094;</a>
 
+        <div class="reacts-container">
+          <div class="curr-react">
+            <i class="fas fa-thumbs-up" id="likeReacts"></i>
+            <div class="num-react">5</div>
+          </div>
+          <div class="curr-react">
+            <i class="fas fa-heart" id="loveReacts"></i>
+            <div class="num-react">15</div>
+          </div>
+          <div class="curr-react">
+            <i class="fas fa-surprise" id="wowReacts"></i>
+            <div class="num-react">25</div>
+          </div>
+          <div class="curr-react">
+            <i class="fas fa-laugh-squint" id="laughReacts"></i>
+            <div class="num-react">45</div>
+          </div>
+        </div>
+
         <div class="slide-caption-container">
+          <div class="react-selector">
+            <div class="react-options">
+              <div class="reaction">
+                <i class="far fa-thumbs-up"
+                    id="likeBtn"
+                    onclick="toggleReaction('like')">
+                </i>
+              </div>
+              <div class="reaction">
+                <i class="far fa-heart"
+                    id="loveBtn"
+                    onclick="toggleReaction('love')">
+                </i>
+              </div>
+              <div class="reaction">
+                <i class="far fa-surprise"
+                    id="wowBtn"
+                    onclick="toggleReaction('wow')">
+                </i>
+              </div>
+              <div class="reaction">
+                <i class="far fa-laugh-squint"
+                    id="laughBtn"
+                    onclick="toggleReaction('laugh')">
+                </i>
+              </div>
+            </div>
+            <div class="user-react" onclick="toggleLike()">
+              <i class="far fa-thumbs-up"></i>
+              <div>Like</div>
+            </div>
+          </div>
           <p id="slide-caption"></p>
         </div>
 
       </div>
+      
 
       <h3>Taken here:</h3>
       <div id="map"></div>

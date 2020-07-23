@@ -171,6 +171,106 @@ function circularIndex(n, items) {
 }
 
 /**
+ * Styles main like button to the current reaction styling.
+ */
+function setReactBtn(reactBtn, iconClass, text, colour) {
+  reactBtn.innerHTML = '';
+  reactBtn.style.color = colour;
+
+  const reactIcon = document.createElement('i');
+  reactIcon.className = iconClass;
+
+  const reactText = document.createElement('div');
+  reactText.innerText = text;
+
+  reactBtn.appendChild(reactIcon);
+  reactBtn.appendChild(reactText)
+}
+
+/**
+ * Flip only the selected reaction's icon to be solid colour.
+ * @param reaction - currently selected reaction from react options.
+ */
+function highlightOption(reaction) {
+  const options = document.getElementsByClassName('react-options')[0];
+  const optionIcons = options.getElementsByClassName('fas');
+
+  for (let icon of optionIcons) {
+    icon.className = icon.className.replace('fas', 'far');
+  }
+
+  let highlightIcon;
+
+  switch (reaction) {
+    case reacts.like:
+      highlightIcon = document.getElementById('likeBtn');
+      break;
+    case reacts.love:
+      highlightIcon = document.getElementById('loveBtn');
+      break;
+    case reacts.wow:
+      highlightIcon = document.getElementById('wowBtn');
+      break;
+    case reacts.laugh:
+      highlightIcon = document.getElementById('laughBtn');
+      break;
+    default:
+      return;
+  }
+
+  highlightIcon.className = reaction.solidIcon;
+}
+
+/**
+ * Toggle reaction of clicked option, reverting to none if already clicked.
+ * @param {string} clickedReact - option clicked by user.
+ */
+function toggleReaction(clickedReact) {
+  const reactBtn = document.getElementsByClassName('user-react')[0];
+  
+  let reaction;
+  switch (clickedReact) {
+    case 'like':
+      reaction = reacts.like;
+      break;
+    case 'love':
+      reaction = reacts.love;
+      break;
+    case 'wow':
+      reaction = reacts.wow;
+      break;
+    case 'laugh':
+      reaction = reacts.laugh;
+      break;
+    case 'none':
+      reaction = reacts.none;
+      break;
+    default:
+      reaction = reacts.like;
+      break;
+  }
+
+  // If a reaction is clicked again, it will unlike the post.
+  reaction = (currReaction === reaction) ? reacts.none : reaction;
+
+  setReactBtn(reactBtn, reaction.solidIcon, reaction.text, reaction.colour);
+  highlightOption(reaction);
+  currReaction = reaction;
+}
+
+/**
+ * Handle logic of main like button to remove existing like when clicked,
+ * but default to like on a click with no previous reaction.
+ */
+function toggleLike() {
+  if (currReaction === reacts.none) {
+    toggleReaction('like');
+  } else {
+    toggleReaction('none');
+  }
+}
+
+/**
  * Initialise map for currently displayed image.
  */
 function initMap() {
@@ -224,5 +324,39 @@ const picData = [
   }
 ];
 
+const reacts = {
+  none: {
+    solidIcon: 'far fa-thumbs-up',
+    outlineIcon: 'far fa-thumbs-up',
+    text: 'Like',
+    colour: '#9e9e9e'
+  },
+  like: {
+    solidIcon: 'fas fa-thumbs-up',
+    outlineIcon: 'far fa-thumbs-up',
+    text: 'Like',
+    colour: '#0fa3b1'
+  },
+  love: {
+    solidIcon: 'fas fa-heart',
+    outlineIcon: 'far fa-heart',
+    text: 'Love',
+    colour: '#ef5350'
+  },
+  wow: {
+    solidIcon: 'fas fa-surprise',
+    outlineIcon: 'far fa-surprise',
+    text: 'Wow',
+    colour: '#ffc107'
+  },
+  laugh: {
+    solidIcon: 'fas fa-laugh-squint',
+    outlineIcon: 'far fa-laugh-squint',
+    text: 'Haha',
+    colour: '#ffc107'
+  }
+}
+
 setGalleryImages();
 let currIndex = showSlidePicture(0);
+let currReaction = reacts.none;
