@@ -39,15 +39,20 @@ function getComments() {
       section.innerHTML = '';
       
       comments.forEach(comment => {
+        const container = document.createElement('div');
+        container.className = 'comment-container';
+
         const post = document.createElement('p');
         post.innerText = comment.comment;
 
         const author = document.createElement('p');
-        author.innerText = 'Posted by ' + comment.name;
+        author.className = 'comment-info';
+        author.innerText = '\u2014 Posted by ' + comment.name;
 
-        section.appendChild(post);
-        section.appendChild(author);
-        section.appendChild(document.createElement('br'));
+        container.appendChild(post);
+        container.appendChild(author);
+
+        section.appendChild(container);
       })
     });
 }
@@ -191,7 +196,7 @@ const picData = [
       'last summer. I decided to take a scenic route and accidentally timed ' +
       'this photo with a cyclist going past.',
     location: {lat: 52.204, lng: 0.117},
-    mapZoom: 12
+    mapZoom: 15
   },
   {
     imgSrc: './images/gallery_2.jpeg',
@@ -206,21 +211,21 @@ const picData = [
     caption: 'A photo of the Marina Bay Sands Hotel in Singapore during one ' +
       'of its light shows, taken from across the bay.',
     location: {lat: 1.285, lng: 103.854},
-    mapZoom: 12
+    mapZoom: 15
   },
   {
     imgSrc: './images/gallery_4.jpeg',
     caption: 'A firebreather in the desert. Taken during a desert safari ' +
       'and dinner excursion when visiting Dubai.',
     location: {lat: 25.179, lng: 55.299},
-    mapZoom: 10
+    mapZoom: 12
   },
   {
     imgSrc: './images/gallery_5.jpeg',
     caption: 'A close-up of a flower in the Flower Dome of the Gardens By ' +
       'the Bay in Singapore.',
     location: {lat: 1.284, lng: 103.865},
-    mapZoom: 12
+    mapZoom: 15
   }
 ];
 

@@ -265,11 +265,32 @@ h3 {
 
 .view-selector {
   margin: 8px 0;
-  text-align: right;
+  text-align: end;
 }
 
 #commentSection {
+  background-color: #e8efe6;
+  border-radius: 8px;
   display: block;
+  height: min-content;
+  padding: 8px 16px;
+}
+
+.comment-container {
+  background-color: white;
+  border-radius: 8px;
+  padding: 8px;
+  margin: 8px 0;
+}
+
+.comment-container p {
+  margin: 0;
+}
+
+.comment-info {
+  font-size: small;
+  font-style: italic;
+  text-align: end;
 }
 
 .delete-btn {
@@ -342,7 +363,7 @@ h3 {
 }
 
 .slide-caption-container {
-  background-color: #616161;
+  background-color: #032b43;
   border-radius: 8px;
   color: white;
   padding: 2px 16px;
