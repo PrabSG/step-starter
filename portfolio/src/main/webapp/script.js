@@ -16,6 +16,7 @@
 
 const getCommentsURL = (limit) => `/comments?limit=${limit}`;
 const deleteAllCommentsURL = '/delete-comments';
+const updateReactionURL = '/posts/react';
 
 const STATUS_OK = 200;
 
@@ -31,8 +32,8 @@ function getComments() {
   const limit = getCommentLimit();
 
   fetch(getCommentsURL(limit))
-    .then(response => response.json())
-    .then(comments => {
+    .then((response) => response.json())
+    .then((comments) => {
       const section = document.getElementById('commentSection');
 
       // Clear old comments to insert new comments.
@@ -61,7 +62,7 @@ function deleteAllComments() {
   }
 
   fetch(deleteAllCommentsURL, options)
-    .then(response => {
+    .then((response) => {
       if (response.status === STATUS_OK) {
         getComments();
       }
@@ -222,6 +223,47 @@ function highlightOption(reaction) {
 }
 
 /**
+ * Fetch reactions on the given post from backend.
+ * @param {string} postId - identifier for post.
+ */
+function updatePostReacts(postId) {
+  // TODO: fetch new count of reactions on post.
+}
+
+/**
+ * Function to update the reactions on the post on backend.
+ * @param oldReact - reaction that current user previously selected.
+ * @param newReact - new reaction current user now selected.
+ */
+function newPostReaction(oldReact, newReact) {
+  const data = new URLSearchParams();
+  data.append('postId', picData[currIndex].id);
+
+  if (oldReact !== reacts.none) {
+    data.append('oldReact', oldReact.id);
+  }
+
+  if (newReact !== reacts.none) {
+    data.append('newReact', newReact.id);
+  }
+
+  const options = {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    method: 'POST',
+    body: data.toString()
+  };
+
+  fetch(updateReactionURL, options)
+  .then((response) => {
+    if (response === STATUS_OK) {
+      updatePostReacts(picData[currIndex].id);
+    }
+  });
+}
+
+/**
  * Toggle reaction of clicked option, reverting to none if already clicked.
  * @param {string} clickedReact - option clicked by user.
  */
@@ -255,6 +297,7 @@ function toggleReaction(clickedReact) {
 
   setReactBtn(reactBtn, reaction.solidIcon, reaction.text, reaction.colour);
   highlightOption(reaction);
+  newPostReaction(currReaction, reaction);
   currReaction = reaction;
 }
 
@@ -286,6 +329,7 @@ function initMap() {
 
 const picData = [
   {
+    id: 'gallery_1',
     imgSrc: './images/gallery_1.jpeg',
     caption: 'This was taken outside King\'s College Chapel in Cambridge ' +
       'last summer. I decided to take a scenic route and accidentally timed ' +
@@ -294,6 +338,7 @@ const picData = [
     mapZoom: 12
   },
   {
+    id: 'gallery_2',
     imgSrc: './images/gallery_2.jpeg',
     caption: 'IC A vs Birmingham B in the NHSF National Kabaddi Tournament ' +
       'earlier this year. I joined Kabaddi at Imperial this year and I am ' +
@@ -302,6 +347,7 @@ const picData = [
     mapZoom: 12
   },
   {
+    id: 'gallery_3',
     imgSrc: './images/gallery_3.jpeg',
     caption: 'A photo of the Marina Bay Sands Hotel in Singapore during one ' +
       'of its light shows, taken from across the bay.',
@@ -309,6 +355,7 @@ const picData = [
     mapZoom: 12
   },
   {
+    id: 'gallery_4',
     imgSrc: './images/gallery_4.jpeg',
     caption: 'A firebreather in the desert. Taken during a desert safari ' +
       'and dinner excursion when visiting Dubai.',
@@ -316,6 +363,7 @@ const picData = [
     mapZoom: 10
   },
   {
+    id: 'gallery_5',
     imgSrc: './images/gallery_5.jpeg',
     caption: 'A close-up of a flower in the Flower Dome of the Gardens By ' +
       'the Bay in Singapore.',
@@ -326,30 +374,35 @@ const picData = [
 
 const reacts = {
   none: {
+    id: 'none',
     solidIcon: 'far fa-thumbs-up',
     outlineIcon: 'far fa-thumbs-up',
     text: 'Like',
     colour: '#9e9e9e'
   },
   like: {
+    id: 'like',
     solidIcon: 'fas fa-thumbs-up',
     outlineIcon: 'far fa-thumbs-up',
     text: 'Like',
     colour: '#0fa3b1'
   },
   love: {
+    id: 'love',
     solidIcon: 'fas fa-heart',
     outlineIcon: 'far fa-heart',
     text: 'Love',
     colour: '#ef5350'
   },
   wow: {
+    id: 'wow',
     solidIcon: 'fas fa-surprise',
     outlineIcon: 'far fa-surprise',
     text: 'Wow',
     colour: '#ffc107'
   },
   laugh: {
+    id: 'laugh',
     solidIcon: 'fas fa-laugh-squint',
     outlineIcon: 'far fa-laugh-squint',
     text: 'Haha',
