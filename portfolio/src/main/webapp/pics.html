@@ -43,24 +43,7 @@
         <a class="next-slide" onclick="advanceSlides(1)">&#10095;</a>
         <a class="prev-slide" onclick="advanceSlides(-1)">&#10094;</a>
 
-        <div class="reacts-container">
-          <div class="curr-react">
-            <i class="fas fa-thumbs-up" id="likeReacts"></i>
-            <div class="num-react">5</div>
-          </div>
-          <div class="curr-react">
-            <i class="fas fa-heart" id="loveReacts"></i>
-            <div class="num-react">15</div>
-          </div>
-          <div class="curr-react">
-            <i class="fas fa-surprise" id="wowReacts"></i>
-            <div class="num-react">25</div>
-          </div>
-          <div class="curr-react">
-            <i class="fas fa-laugh-squint" id="laughReacts"></i>
-            <div class="num-react">45</div>
-          </div>
-        </div>
+        <div class="reacts-container"></div>
 
         <div class="slide-caption-container">
           <div class="react-selector">
@@ -105,7 +88,13 @@
       <div id="map"></div>
     </div>
 
-    <script src="script.js"></script>
+    <!-- Gallery Image Modal -->
+    <div id="galleryModal" class="modal">
+      <span id="galleryModalClose" class="close">&times;</span>
+      <img id="galleryModalImg" class="modal-content">
+    </div>
+
+    <script defer src="script.js"></script>
     <script async defer 
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCOX6LdgXSwMzZKlUTm09xvmSbVhJBJPsA&callback=initMap">
     </script>

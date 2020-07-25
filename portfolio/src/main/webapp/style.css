@@ -367,18 +367,18 @@ h3 {
   margin: 8px 0;
 }
 
-#likeReacts {
+/* ,.reacts-container #likeReacts i {
   color: #0fa3b1;
 }
 
-#loveReacts {
+#loveReacts i {
   color: #ef5350;
 }
 
-#wowReacts,
-#laughReacts {
+#wowReacts i,
+#laughReacts i {
   color: #ffc107;
-}
+} */
 
 .curr-react {
   align-items: center;

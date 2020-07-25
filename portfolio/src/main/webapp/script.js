@@ -16,9 +16,100 @@
 
 const getCommentsURL = (limit) => `/comments?limit=${limit}`;
 const deleteAllCommentsURL = '/delete-comments';
-const updateReactionURL = '/posts/react';
+const postReactionsURL = '/posts/react';
 
 const STATUS_OK = 200;
+
+const reacts = {
+  none: {
+    id: 'none',
+    solidIcon: 'far fa-thumbs-up',
+    outlineIcon: 'far fa-thumbs-up',
+    text: 'Like',
+    colour: '#9e9e9e'
+  },
+  like: {
+    id: 'like',
+    solidIcon: 'fas fa-thumbs-up',
+    outlineIcon: 'far fa-thumbs-up',
+    text: 'Like',
+    colour: '#0fa3b1'
+  },
+  love: {
+    id: 'love',
+    solidIcon: 'fas fa-heart',
+    outlineIcon: 'far fa-heart',
+    text: 'Love',
+    colour: '#ef5350'
+  },
+  wow: {
+    id: 'wow',
+    solidIcon: 'fas fa-surprise',
+    outlineIcon: 'far fa-surprise',
+    text: 'Wow',
+    colour: '#ffc107'
+  },
+  laugh: {
+    id: 'laugh',
+    solidIcon: 'fas fa-laugh-squint',
+    outlineIcon: 'far fa-laugh-squint',
+    text: 'Haha',
+    colour: '#ffc107'
+  }
+}
+
+const picData = [
+  {
+    id: 'gallery_1',
+    imgSrc: './images/gallery_1.jpeg',
+    caption: 'This was taken outside King\'s College Chapel in Cambridge ' +
+      'last summer. I decided to take a scenic route and accidentally timed ' +
+      'this photo with a cyclist going past.',
+    location: {lat: 52.204, lng: 0.117},
+    mapZoom: 15,
+    reaction: reacts.none
+  },
+  {
+    id: 'gallery_2',
+    imgSrc: './images/gallery_2.jpeg',
+    caption: 'IC A vs Birmingham B in the NHSF National Kabaddi Tournament ' +
+      'earlier this year. I joined Kabaddi at Imperial this year and I am ' +
+      'loving it!',
+    location: {lat: 52.546, lng: -2.052},
+    mapZoom: 12,
+    reaction: reacts.none
+  },
+  {
+    id: 'gallery_3',
+    imgSrc: './images/gallery_3.jpeg',
+    caption: 'A photo of the Marina Bay Sands Hotel in Singapore during one ' +
+      'of its light shows, taken from across the bay.',
+    location: {lat: 1.285, lng: 103.854},
+    mapZoom: 15,
+    reaction: reacts.none
+  },
+  {
+    id: 'gallery_4',
+    imgSrc: './images/gallery_4.jpeg',
+    caption: 'A firebreather in the desert. Taken during a desert safari ' +
+      'and dinner excursion when visiting Dubai.',
+    location: {lat: 25.179, lng: 55.299},
+    mapZoom: 12,
+    reaction: reacts.none
+  },
+  {
+    id: 'gallery_5',
+    imgSrc: './images/gallery_5.jpeg',
+    caption: 'A close-up of a flower in the Flower Dome of the Gardens By ' +
+      'the Bay in Singapore.',
+    location: {lat: 1.284, lng: 103.865},
+    mapZoom: 15,
+    reaction: reacts.none
+  }
+];
+
+let currIndex = 0;
+let currReaction = reacts.none;
 
 function getCommentLimit() {
   const selector = document.getElementById('commentLimitSelect');
@@ -139,6 +230,7 @@ function advanceSlides(n) {
 function showSlidePicture(n) {
   const slides = document.getElementsByClassName('slide-pic');
   const caption = document.getElementById('slide-caption');
+  const reactBtn = document.getElementsByClassName('user-react')[0];
 
   // If not on pics.html document wil not contain any slide elements.
   if (slides.length === 0) {
@@ -157,6 +249,13 @@ function showSlidePicture(n) {
   slides[newIndex].getElementsByClassName('slide-counter')[0].innerText =
      (newIndex + 1).toString() + '/' + slides.length.toString();
 
+  fetchPostReacts(picData[newIndex].id);
+
+  const currReaction = picData[newIndex].reaction;
+  
+  setReactBtn(reactBtn, currReaction.solidIcon, currReaction.text, currReaction.colour);
+  highlightOption(currReaction);
+  
   return newIndex;
 };
 
@@ -222,12 +321,53 @@ function highlightOption(reaction) {
   highlightIcon.className = reaction.solidIcon;
 }
 
+function generateReactCounter(container, reaction, count) {
+  const box = document.createElement('div');
+  box.className = 'curr-react';
+  
+  const icon = document.createElement('i');
+  icon.className = reaction.solidIcon;
+  icon.style.color = reaction.colour;
+
+  const countDiv = document.createElement('div');
+  countDiv.innerText = count.toString();
+
+  box.appendChild(icon);
+  box.appendChild(countDiv);
+  container.appendChild(box);
+}
+
+function updatePostReacts(reactCounts) {
+  const reactCounter = document.getElementsByClassName("reacts-container")[0];
+  reactCounter.innerHTML = '';
+
+  if (reactCounts.likeCount > 0) {
+    generateReactCounter(reactCounter, reacts.like, reactCounts.likeCount);
+  }
+  if (reactCounts.loveCount > 0) {
+    generateReactCounter(reactCounter, reacts.love, reactCounts.loveCount);
+  }
+  if (reactCounts.wowCount > 0) {
+    generateReactCounter(reactCounter, reacts.wow, reactCounts.wowCount);
+  }
+  if (reactCounts.laughCount > 0) {
+    generateReactCounter(reactCounter, reacts.laugh, reactCounts.laughCount);
+  }
+}
+
 /**
  * Fetch reactions on the given post from backend.
  * @param {string} postId - identifier for post.
  */
-function updatePostReacts(postId) {
-  // TODO: fetch new count of reactions on post.
+function fetchPostReacts(postId) {
+  const postParam = new URLSearchParams();
+  postParam.append('postId', postId);
+
+  fetch(postReactionsURL + '?' + postParam.toString())
+  .then((response) => response.json())
+  .then(data => {
+    updatePostReacts(data);
+  });
 }
 
 /**
@@ -255,10 +395,10 @@ function newPostReaction(oldReact, newReact) {
     body: data.toString()
   };
 
-  fetch(updateReactionURL, options)
+  fetch(postReactionsURL, options)
   .then((response) => {
-    if (response === STATUS_OK) {
-      updatePostReacts(picData[currIndex].id);
+    if (response.status === STATUS_OK) {
+      fetchPostReacts(picData[currIndex].id);
     }
   });
 }
@@ -293,12 +433,12 @@ function toggleReaction(clickedReact) {
   }
 
   // If a reaction is clicked again, it will unlike the post.
-  reaction = (currReaction === reaction) ? reacts.none : reaction;
+  reaction = (picData[currIndex].reaction === reaction) ? reacts.none : reaction;
 
   setReactBtn(reactBtn, reaction.solidIcon, reaction.text, reaction.colour);
   highlightOption(reaction);
-  newPostReaction(currReaction, reaction);
-  currReaction = reaction;
+  newPostReaction(picData[currIndex].reaction, reaction);
+  picData[currIndex].reaction = reaction;
 }
 
 /**
@@ -306,7 +446,7 @@ function toggleReaction(clickedReact) {
  * but default to like on a click with no previous reaction.
  */
 function toggleLike() {
-  if (currReaction === reacts.none) {
+  if (picData[currIndex].reaction === reacts.none) {
     toggleReaction('like');
   } else {
     toggleReaction('none');
@@ -327,89 +467,5 @@ function initMap() {
   );
 }
 
-const picData = [
-  {
-    id: 'gallery_1',
-    imgSrc: './images/gallery_1.jpeg',
-    caption: 'This was taken outside King\'s College Chapel in Cambridge ' +
-      'last summer. I decided to take a scenic route and accidentally timed ' +
-      'this photo with a cyclist going past.',
-    location: {lat: 52.204, lng: 0.117},
-    mapZoom: 12
-  },
-  {
-    id: 'gallery_2',
-    imgSrc: './images/gallery_2.jpeg',
-    caption: 'IC A vs Birmingham B in the NHSF National Kabaddi Tournament ' +
-      'earlier this year. I joined Kabaddi at Imperial this year and I am ' +
-      'loving it!',
-    location: {lat: 52.546, lng: -2.052},
-    mapZoom: 12
-  },
-  {
-    id: 'gallery_3',
-    imgSrc: './images/gallery_3.jpeg',
-    caption: 'A photo of the Marina Bay Sands Hotel in Singapore during one ' +
-      'of its light shows, taken from across the bay.',
-    location: {lat: 1.285, lng: 103.854},
-    mapZoom: 12
-  },
-  {
-    id: 'gallery_4',
-    imgSrc: './images/gallery_4.jpeg',
-    caption: 'A firebreather in the desert. Taken during a desert safari ' +
-      'and dinner excursion when visiting Dubai.',
-    location: {lat: 25.179, lng: 55.299},
-    mapZoom: 10
-  },
-  {
-    id: 'gallery_5',
-    imgSrc: './images/gallery_5.jpeg',
-    caption: 'A close-up of a flower in the Flower Dome of the Gardens By ' +
-      'the Bay in Singapore.',
-    location: {lat: 1.284, lng: 103.865},
-    mapZoom: 12
-  }
-];
-
-const reacts = {
-  none: {
-    id: 'none',
-    solidIcon: 'far fa-thumbs-up',
-    outlineIcon: 'far fa-thumbs-up',
-    text: 'Like',
-    colour: '#9e9e9e'
-  },
-  like: {
-    id: 'like',
-    solidIcon: 'fas fa-thumbs-up',
-    outlineIcon: 'far fa-thumbs-up',
-    text: 'Like',
-    colour: '#0fa3b1'
-  },
-  love: {
-    id: 'love',
-    solidIcon: 'fas fa-heart',
-    outlineIcon: 'far fa-heart',
-    text: 'Love',
-    colour: '#ef5350'
-  },
-  wow: {
-    id: 'wow',
-    solidIcon: 'fas fa-surprise',
-    outlineIcon: 'far fa-surprise',
-    text: 'Wow',
-    colour: '#ffc107'
-  },
-  laugh: {
-    id: 'laugh',
-    solidIcon: 'fas fa-laugh-squint',
-    outlineIcon: 'far fa-laugh-squint',
-    text: 'Haha',
-    colour: '#ffc107'
-  }
-}
-
 setGalleryImages();
-let currIndex = showSlidePicture(0);
-let currReaction = reacts.none;
+currIndex = showSlidePicture(0);
