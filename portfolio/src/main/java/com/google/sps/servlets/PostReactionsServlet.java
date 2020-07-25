@@ -2,6 +2,8 @@ package com.google.sps.servlets;
 
 import static com.google.sps.utils.ReactionUtils.toReaction;
 
+import com.google.gson.Gson;
+import com.google.sps.data.Post;
 import com.google.sps.data.ReactionDatastore;
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -18,7 +20,14 @@ public class PostReactionsServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    super.doGet(request, response);
+    String postId = request.getParameter("postId");
+
+    Post post = store.getReactions(postId);
+
+    response.setContentType("application/json");
+
+    Gson gson = new Gson();
+    response.getWriter().println(gson.toJson(post));
   }
 
   @Override

@@ -36,10 +36,10 @@ public class ReactionDatastore {
       Entity postEntity = datastore.get(KeyFactory.createKey("Post", postId));
 
       Post post = new Post(postId);
-      post.setLikeCount((Integer) postEntity.getProperty("likeCount"));
-      post.setLoveCount((Integer) postEntity.getProperty("loveCount"));
-      post.setWowCount((Integer) postEntity.getProperty("wowCount"));
-      post.setLaughCount((Integer) postEntity.getProperty("laughCount"));
+      post.setLikeCount((Long) postEntity.getProperty("likeCount"));
+      post.setLoveCount((Long) postEntity.getProperty("loveCount"));
+      post.setWowCount((Long) postEntity.getProperty("wowCount"));
+      post.setLaughCount((Long) postEntity.getProperty("laughCount"));
 
       return post;
     } catch (EntityNotFoundException e) {
