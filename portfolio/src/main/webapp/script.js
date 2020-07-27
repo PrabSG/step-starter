@@ -131,15 +131,20 @@ function getComments() {
       section.innerHTML = '';
       
       comments.forEach(comment => {
+        const container = document.createElement('div');
+        container.className = 'comment-container';
+
         const post = document.createElement('p');
         post.innerText = comment.comment;
 
         const author = document.createElement('p');
-        author.innerText = 'Posted by ' + comment.name;
+        author.className = 'comment-info';
+        author.innerText = '\u2014 Posted by ' + comment.name;
 
-        section.appendChild(post);
-        section.appendChild(author);
-        section.appendChild(document.createElement('br'));
+        container.appendChild(post);
+        container.appendChild(author);
+
+        section.appendChild(container);
       })
     });
 }
@@ -173,16 +178,20 @@ function openModal(modalId, closeId) {
   };
 }
 
-/**
- * Opens a modal with the given image and caption.
- */
-function openSimpleImageModal(modalId, modalImgId, captionId, closeId, imgSrc, captionText) {  
+function openSimpleImageModal(modalId, modalImgId, closeId, imgSrc) {
   openModal(modalId, closeId);
 
   const modalImg = document.getElementById(modalImgId);
-  const caption = document.getElementById(captionId);
-
   modalImg.src = imgSrc;
+}
+
+/**
+ * Opens a modal with the given image and caption.
+ */
+function openCaptionedImageModal(modalId, modalImgId, captionId, closeId, imgSrc, captionText) {  
+  openSimpleImageModal(modalId, modalImgId, closeId, imgSrc);
+
+  const caption = document.getElementById(captionId);
   caption.innerText = captionText;
 }
 
@@ -206,7 +215,13 @@ function setGalleryImages() {
     counter.className = 'slide-counter';
 
     const img = document.createElement('img');
-    img.src = pic.imgSrc;
+    img.src = getSmallFilePath(pic.imgSrc);
+    img.onclick = () => openSimpleImageModal(
+        'galleryModal',
+        'galleryModalImg',
+        'galleryModalClose',
+        pic.imgSrc
+    );
 
     slidePic.appendChild(counter);
     slidePic.appendChild(img);
@@ -258,6 +273,14 @@ function showSlidePicture(n) {
   
   return newIndex;
 };
+
+/**
+ * Function to manipulate image file path to compressed version.
+ * @param {string} path - file path to original image file.
+ */
+function getSmallFilePath(path) {
+  return path.replace('.jpeg', '_small.jpeg');
+}
 
 /**
  * Return correct index for a circular array.
