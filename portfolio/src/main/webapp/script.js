@@ -321,6 +321,12 @@ function highlightOption(reaction) {
   highlightIcon.className = reaction.solidIcon;
 }
 
+/**
+ * Create HTML elements to display the given reaction and current count.
+ * @param container - Enclosing container to insert into.
+ * @param reaction - Reaction to be shown in this element.
+ * @param {Number} count - Number of reactions of this type to be displayed.
+ */
 function generateReactCounter(container, reaction, count) {
   const box = document.createElement('div');
   box.className = 'curr-react';
@@ -337,6 +343,10 @@ function generateReactCounter(container, reaction, count) {
   container.appendChild(box);
 }
 
+/**
+ * Generate reaction icons and counters for current post.
+ * @param reactCounts - current counts for each reaction.
+ */
 function updatePostReacts(reactCounts) {
   const reactCounter = document.getElementsByClassName("reacts-container")[0];
   reactCounter.innerHTML = '';
@@ -366,7 +376,7 @@ function fetchPostReacts(postId) {
   fetch(postReactionsURL + '?' + postParam.toString())
   .then((response) => response.json())
   .then(data => {
-    updatePostReacts(data);
+    updatePostReacts(data.reactCounts);
   });
 }
 

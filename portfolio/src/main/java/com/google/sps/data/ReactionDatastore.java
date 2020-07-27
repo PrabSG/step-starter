@@ -36,10 +36,9 @@ public class ReactionDatastore {
       Entity postEntity = datastore.get(KeyFactory.createKey("Post", postId));
 
       Post post = new Post(postId);
-      post.setLikeCount((Long) postEntity.getProperty("likeCount"));
-      post.setLoveCount((Long) postEntity.getProperty("loveCount"));
-      post.setWowCount((Long) postEntity.getProperty("wowCount"));
-      post.setLaughCount((Long) postEntity.getProperty("laughCount"));
+      Map<String, Long> reactCounts = post.getReactCounts();
+
+      reactCounts.replaceAll((type, count) -> (long) postEntity.getProperty(type));
 
       return post;
     } catch (EntityNotFoundException e) {
@@ -90,11 +89,11 @@ public class ReactionDatastore {
 
   private Entity createNewPost(String postId) {
     Entity postEntity = new Entity("Post", postId);
+    Post post = new Post(postId);
 
-    postEntity.setProperty("likeCount", 0);
-    postEntity.setProperty("loveCount", 0);
-    postEntity.setProperty("wowCount", 0);
-    postEntity.setProperty("laughCount", 0);
+    for (String reactType : post.getReactCounts().keySet()) {
+      postEntity.setProperty(reactType, 0);
+    }
 
     return postEntity;
   }
