@@ -3,6 +3,9 @@ package com.google.sps.data;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.EntityNotFoundException;
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.FilterOperator;
@@ -23,20 +26,29 @@ public class UserInfoDatastore implements UserInfoStore {
 
   @Override
   public String getNickname(String id) {
-    Query query = new Query("UserInfo")
-          .setFilter(new Query.FilterPredicate("id", FilterOperator.EQUAL, id));
-    PreparedQuery results = datastore.prepare(query);
-    Entity userEntity = results.asSingleEntity();
+    Key key = KeyFactory.createKey("UserInfo", id);
 
-    if (userEntity == null) {
+    try {
+      Entity userEntity = datastore.get(key);
+      return (String) userEntity.getProperty("nickname");
+    } catch (EntityNotFoundException e) {
       return "";
     }
-
-    return (String) userEntity.getProperty("nickname");
   }
 
   @Override
   public void setNickname(String id, String nickname) {
+    Key userKey = KeyFactory.createKey("UserInfo", id);
+    Entity user;
 
+    try {
+      user = datastore.get(userKey);
+      user.setProperty("nickname", nickname);
+    } catch (EntityNotFoundException e) {
+      user = new Entity("UserInfo", id);
+      user.setProperty("nickname", nickname);
+    }
+
+    datastore.put(user);
   }
 }
