@@ -4,7 +4,7 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
-import com.google.sps.data.User;
+import com.google.sps.data.UserInfo;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -37,13 +37,13 @@ public class AuthCheckServlet extends HttpServlet {
       String id = userService.getCurrentUser().getUserId();
       String logoutURL = userService.createLogoutURL("/");
 
-      User user = new User(true, id);
+      UserInfo userInfo = new UserInfo(true, id);
       Gson gson = new Gson();
 
-      JsonElement userInfo = gson.toJsonTree(user);
-      userInfo.getAsJsonObject().addProperty("logoutURL", logoutURL);
+      JsonElement responseInfo = gson.toJsonTree(userInfo);
+      responseInfo.getAsJsonObject().addProperty("logoutURL", logoutURL);
 
-      response.getWriter().println(gson.toJson(userInfo));
+      response.getWriter().println(gson.toJson(responseInfo));
     }
   }
 }

@@ -1,16 +1,16 @@
 package com.google.sps.data;
 
-public class User {
+public class UserInfo {
 
   private boolean loggedIn;
   private String id;
   private String nickname;
 
-  public User() {
+  public UserInfo() {
     this.loggedIn = false;
   }
 
-  public User(boolean loggedIn, String id) {
+  public UserInfo(boolean loggedIn, String id) {
     this.loggedIn = loggedIn;
     this.id = id;
   }
