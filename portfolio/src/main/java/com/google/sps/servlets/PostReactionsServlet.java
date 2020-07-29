@@ -7,6 +7,7 @@ import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
 import com.google.sps.data.Post;
 import com.google.sps.data.ReactionDatastore;
+import com.google.sps.data.ReactionStore;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("posts/react")
 public class PostReactionsServlet extends HttpServlet {
 
-  private ReactionDatastore store = ReactionDatastore.getInstance();
+  private ReactionStore store = ReactionDatastore.getInstance();
 
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -39,10 +40,9 @@ public class PostReactionsServlet extends HttpServlet {
 
     if (userService.isUserLoggedIn()) {
       String postId = request.getParameter("postId");
-      String toDecrement = request.getParameter("oldReact");
       String toIncrement = request.getParameter("newReact");
 
-      store.updatePost(postId, REACTION_MAP.get(toDecrement), REACTION_MAP.get(toIncrement));
+      store.updatePost(postId, userService.getCurrentUser().getUserId(), REACTION_MAP.get(toIncrement));
 
       response.setStatus(HttpServletResponse.SC_OK);
     } else {

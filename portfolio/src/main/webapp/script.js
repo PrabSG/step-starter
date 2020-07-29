@@ -454,17 +454,17 @@ function updatePostReacts(reactCounts) {
   const reactCounter = document.getElementsByClassName("reacts-container")[0];
   reactCounter.innerHTML = '';
 
-  if (reactCounts.likeCount > 0) {
-    generateReactCounter(reactCounter, reacts.like, reactCounts.likeCount);
+  if (reactCounts.LIKE > 0) {
+    generateReactCounter(reactCounter, reacts.like, reactCounts.LIKE);
   }
-  if (reactCounts.loveCount > 0) {
-    generateReactCounter(reactCounter, reacts.love, reactCounts.loveCount);
+  if (reactCounts.LOVE > 0) {
+    generateReactCounter(reactCounter, reacts.love, reactCounts.LOVE);
   }
-  if (reactCounts.wowCount > 0) {
-    generateReactCounter(reactCounter, reacts.wow, reactCounts.wowCount);
+  if (reactCounts.WOW > 0) {
+    generateReactCounter(reactCounter, reacts.wow, reactCounts.WOW);
   }
-  if (reactCounts.laughCount > 0) {
-    generateReactCounter(reactCounter, reacts.laugh, reactCounts.laughCount);
+  if (reactCounts.LAUGH > 0) {
+    generateReactCounter(reactCounter, reacts.laugh, reactCounts.LAUGH);
   }
 }
 
@@ -485,14 +485,12 @@ function fetchPostReacts(postId) {
 
 /**
  * Function to update the reactions on the post on backend.
- * @param oldReact - reaction that current user previously selected.
  * @param newReact - new reaction current user now selected.
  */
-function newPostReaction(oldReact, newReact) {
+function newPostReaction(newReact) {
   const data = new URLSearchParams();
   
   data.append('postId', picData[currIndex].id);
-  data.append('oldReact', oldReact.id);
   data.append('newReact', newReact.id);
 
   const options = {
@@ -529,7 +527,7 @@ function toggleReaction(clickedReact) {
     
       setReactBtn(reactBtn, reaction.solidIcon, reaction.text, reaction.colour);
       highlightOption(reaction);
-      newPostReaction(picData[currIndex].reaction, reaction);
+      newPostReaction(reaction);
 
       picData[currIndex].reaction = reaction;
     } else {

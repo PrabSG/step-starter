@@ -19,21 +19,4 @@ public class ReactionUtils {
 
     return mapping;
   }
-
-  public static String toPropertyName(Reaction reaction) {
-    switch (reaction) {
-      case LIKE:
-        return "likeCount";
-      case LOVE:
-        return "loveCount";
-      case WOW:
-        return "wowCount";
-      case LAUGH:
-        return "laughCount";
-      case NONE:
-        throw new IllegalArgumentException("None reaction is not stored");
-    }
-
-    return "";
-  }
 }
