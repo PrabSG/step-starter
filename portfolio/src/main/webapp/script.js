@@ -14,6 +14,7 @@
 
 "use strict";
 
+const authCheckURL = '/auth/check';
 const getCommentsURL = (limit) => `/comments?limit=${limit}`;
 const deleteAllCommentsURL = '/delete-comments';
 const postReactionsURL = '/posts/react';
@@ -116,37 +117,108 @@ function getCommentLimit() {
   return selector.options[selector.selectedIndex].value;
 }
 
+function initPortfolio() {
+  fetch(authCheckURL)
+  .then(response => response.json())
+  .then(info => {
+    if (info.loggedIn) {
+      generateComments();
+      addLogoutLink(info.logoutURL);
+    } else {
+      hidePostBtn();
+      showCommentLogin(info.loginURL);
+    }
+  });
+}
+
+function addLogoutLink(logoutURL) {
+  const container = document.getElementsByClassName('content')[0];
+
+  const text = document.createElement('p');
+  text.innerText = 'Signed in | ';
+  text.style.textAlign = 'center';
+
+  const logoutLink = document.createElement('a');
+  logoutLink.href = logoutURL;
+  logoutLink.innerText = 'Log out';
+
+  text.appendChild(logoutLink);
+
+  container.appendChild(text);
+}
+
+function hidePostBtn() {
+  const postBtn = document.getElementById('postBtn');
+  postBtn.style.display = 'none';
+}
+
+/**
+ * Render the comments section with comments fetched from server.
+ */
+function generateComments() {
+  const limit = getCommentLimit();
+
+  fetch(getCommentsURL(limit))
+  .then(response => response.json())
+  .then((comments) => {
+    const section = document.getElementById('commentSection');
+
+    // Clear old comments to insert new comments.
+    section.innerHTML = '';
+    
+    comments.forEach(comment => {
+      const container = document.createElement('div');
+      container.className = 'comment-container';
+
+      const post = document.createElement('p');
+      post.innerText = comment.comment;
+
+      const author = document.createElement('p');
+      author.className = 'comment-info';
+      author.innerText = '\u2014 Posted by ' + comment.name;
+
+      container.appendChild(post);
+      container.appendChild(author);
+
+      section.appendChild(container);
+    })
+  });
+}
+
+/**
+ * Show message asking user to log in to post/view comments.
+ * @param {String} loginURL - path to login page.
+ */
+function showCommentLogin(loginURL) {
+  const section = document.getElementById('commentSection');
+
+  section.innerHTML = '';
+
+  const text = document.createElement('p');
+  text.innerText = 'Please login to view and post comments.';
+  text.style.textAlign = 'center';
+  
+  const loginText = document.createElement('a');
+  loginText.innerText = 'Login here'
+  loginText.href = loginURL;
+
+  section.appendChild(text);
+  section.appendChild(loginText);
+}
+
 /**
  * Fetches comments stored in backend servlet.
  */
 function getComments() {
-  const limit = getCommentLimit();
-
-  fetch(getCommentsURL(limit))
-    .then((response) => response.json())
-    .then((comments) => {
-      const section = document.getElementById('commentSection');
-
-      // Clear old comments to insert new comments.
-      section.innerHTML = '';
-      
-      comments.forEach(comment => {
-        const container = document.createElement('div');
-        container.className = 'comment-container';
-
-        const post = document.createElement('p');
-        post.innerText = comment.comment;
-
-        const author = document.createElement('p');
-        author.className = 'comment-info';
-        author.innerText = '\u2014 Posted by ' + comment.name;
-
-        container.appendChild(post);
-        container.appendChild(author);
-
-        section.appendChild(container);
-      })
-    });
+  fetch(authCheckURL)
+  .then(response => response.json())
+  .then(info => {
+    if (info.loggedIn) {
+      generateComments();
+    } else {
+      showCommentLogin(info.loginURL);
+    }
+  });
 }
 
 /**
