@@ -14,6 +14,8 @@
 
 package com.google.sps.servlets;
 
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
@@ -37,6 +39,13 @@ public class CommentsServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    UserService userService = UserServiceFactory.getUserService();
+
+    if (!userService.isUserLoggedIn()) {
+      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+      return;
+    }
+
     String limitString = getParameter(request, "limit", String.valueOf(DEFAULT_COMMENT_LIMIT));
     int limit;
 
@@ -54,10 +63,14 @@ public class CommentsServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String userName = getParameter(request, "name", "Anonymous");
-    String comment = getParameter(request, "comment", "");
+    UserService userService = UserServiceFactory.getUserService();
 
-    store.post(new Comment(userName, comment));
+    if (userService.isUserLoggedIn()) {
+      String userName = getParameter(request, "name", "Anonymous");
+      String comment = getParameter(request, "comment", "");
+
+      store.post(new Comment(userName, comment));
+    }
 
     response.sendRedirect("./index.html");
   }
