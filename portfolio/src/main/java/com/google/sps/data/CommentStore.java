@@ -10,5 +10,5 @@ public interface CommentStore {
 
   void deleteAllComments();
 
-  void post(Comment comment);
+  void post(String comment, String userId);
 }

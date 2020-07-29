@@ -3,37 +3,32 @@ package com.google.sps.data;
 import java.time.Instant;
 
 public class Comment {
-  private final String name;
   private final String comment;
+  private final String userId;
   private final Instant timestamp;
+  private String name;
+  private long id;
 
-  public Comment(String name, String comment, Instant timestamp) {
-    this.name = name;
+  public Comment(String comment, String userId, Instant timestamp) {
     this.comment = comment;
+    this.userId = userId;
     this.timestamp = timestamp;
   }
 
-  public Comment (String name, String comment) {
-    this(name, comment, Instant.now());
+  public Comment(String comment, String userId, Instant timestamp, long id) {
+    this(comment, userId, timestamp);
+    this.id = id;
   }
 
-  public Comment(String comment) {
-    this("", comment);
+  public Comment (String comment, String userId) {
+    this(comment, userId, Instant.now());
   }
 
-  public Comment() {
-    this("", "");
+  public void setName(String name) {
+    this.name = name;
   }
 
-  public String getName() {
-    return this.name;
-  }
-
-  public String getComment() {
-    return this.comment;
-  }
-
-  public Instant getTimestamp() {
-    return this.timestamp;
+  public String getUserId() {
+    return this.userId;
   }
 }

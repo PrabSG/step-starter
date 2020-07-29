@@ -36,9 +36,11 @@ public class CommentDatastore implements CommentStore {
     List<Comment> comments = new ArrayList<>();
 
     for (Entity entity : results.asIterable()) {
-      Comment comment = new Comment((String) entity.getProperty("name"),
+      Comment comment = new Comment(
           (String) entity.getProperty("comment"),
-          Instant.ofEpochMilli((long) entity.getProperty("timestamp")));
+          (String) entity.getProperty("userId"),
+          Instant.ofEpochMilli((long) entity.getProperty("timestamp")),
+          entity.getKey().getId());
 
       comments.add(comment);
     }
@@ -63,11 +65,11 @@ public class CommentDatastore implements CommentStore {
   }
 
   @Override
-  public void post(Comment comment) {
+  public void post(String comment, String userId) {
     Entity commentEntity = new Entity("Comment");
-    commentEntity.setProperty("name", comment.getName());
-    commentEntity.setProperty("comment", comment.getComment());
-    commentEntity.setProperty("timestamp", comment.getTimestamp().toEpochMilli());
+    commentEntity.setProperty("comment", comment);
+    commentEntity.setProperty("userId", userId);
+    commentEntity.setProperty("timestamp", Instant.now().toEpochMilli());
 
     datastore.put(commentEntity);
   }
