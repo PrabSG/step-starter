@@ -2,9 +2,7 @@ package com.google.sps.servlets;
 
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.sps.data.UserInfo;
+import com.google.gson.JsonObject;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,27 +21,21 @@ public class AuthCheckServlet extends HttpServlet {
     response.setContentType("application/json");
 
     if (!userService.isUserLoggedIn()) {
-      StringBuilder loggedOutResp = new StringBuilder();
-      loggedOutResp.append("{");
-      loggedOutResp.append("\"loggedIn\": false,");
-      loggedOutResp.append("\"loginURL\":");
-      loggedOutResp.append("\"");
-      loggedOutResp.append(userService.createLoginURL("/"));
-      loggedOutResp.append("\"");
-      loggedOutResp.append("}");
+      JsonObject userInfo = new JsonObject();
+      userInfo.addProperty("loggedIn", false);
+      userInfo.addProperty("loginURL", userService.createLoginURL("/"));
 
-      response.getWriter().println(loggedOutResp.toString());
+      response.getWriter().println(userInfo.toString());
     } else {
       String id = userService.getCurrentUser().getUserId();
       String logoutURL = userService.createLogoutURL("/");
 
-      UserInfo userInfo = new UserInfo(true, id);
-      Gson gson = new Gson();
+      JsonObject userInfo = new JsonObject();
+      userInfo.addProperty("loggedIn", true);
+      userInfo.addProperty("id", id);
+      userInfo.addProperty("logoutURL", logoutURL);
 
-      JsonElement responseInfo = gson.toJsonTree(userInfo);
-      responseInfo.getAsJsonObject().addProperty("logoutURL", logoutURL);
-
-      response.getWriter().println(gson.toJson(responseInfo));
+      response.getWriter().println(userInfo.toString());
     }
   }
 }
