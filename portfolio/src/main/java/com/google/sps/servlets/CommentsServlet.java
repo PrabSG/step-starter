@@ -63,10 +63,14 @@ public class CommentsServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String userName = getParameter(request, "name", "Anonymous");
-    String comment = getParameter(request, "comment", "");
+    UserService userService = UserServiceFactory.getUserService();
 
-    store.post(new Comment(userName, comment));
+    if (userService.isUserLoggedIn()) {
+      String userName = getParameter(request, "name", "Anonymous");
+      String comment = getParameter(request, "comment", "");
+
+      store.post(new Comment(userName, comment));
+    }
 
     response.sendRedirect("./index.html");
   }
