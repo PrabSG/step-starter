@@ -88,4 +88,21 @@ public class ReactionDatastore implements ReactionStore {
       }
     }
   }
+
+  @Override
+  public Reaction getUserReaction(String postId, String userId) {
+    Filter postFilter = new FilterPredicate("postId", FilterOperator.EQUAL, postId);
+    Filter userFilter = new FilterPredicate("userId", FilterOperator.EQUAL, userId);
+    Filter combinedFilter = CompositeFilterOperator.and(postFilter, userFilter);
+
+    Query query = new Query("UserReaction").setFilter(combinedFilter);
+
+    Entity reaction = datastore.prepare(query).asSingleEntity();
+
+    if (reaction == null) {
+      return NONE;
+    } else {
+      return Reaction.valueOf((String) reaction.getProperty("reaction"));
+    }
+  }
 }

@@ -1,9 +1,5 @@
 package com.google.sps.servlets;
 
-import static com.google.sps.utils.ReactionUtils.REACTION_MAP;
-
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
 import com.google.sps.data.Post;
 import com.google.sps.data.ReactionDatastore;
@@ -15,7 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("posts/react")
+@WebServlet("posts/reactions")
 public class PostReactionsServlet extends HttpServlet {
 
   private ReactionStore store = ReactionDatastore.getInstance();
@@ -27,26 +23,9 @@ public class PostReactionsServlet extends HttpServlet {
 
     Post post = store.getReactions(postId);
 
-    response.setContentType("application/json");
-
     Gson gson = new Gson();
+
+    response.setContentType("application/json");
     response.getWriter().println(gson.toJson(post));
-  }
-
-  @Override
-  protected void doPost(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
-    UserService userService = UserServiceFactory.getUserService();
-
-    if (userService.isUserLoggedIn()) {
-      String postId = request.getParameter("postId");
-      String toIncrement = request.getParameter("newReact");
-
-      store.updatePost(postId, userService.getCurrentUser().getUserId(), REACTION_MAP.get(toIncrement));
-
-      response.setStatus(HttpServletResponse.SC_OK);
-    } else {
-      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-    }
   }
 }

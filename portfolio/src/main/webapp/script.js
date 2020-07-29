@@ -17,7 +17,8 @@
 const authCheckURL = '/auth/check';
 const getCommentsURL = (limit) => `/comments?limit=${limit}`;
 const deleteAllCommentsURL = '/delete-comments';
-const postReactionsURL = '/posts/react';
+const postReactionsURL = '/posts/reactions';
+const userPostReactionURL = '/posts/user/react';
 
 const STATUS_OK = 200;
 
@@ -325,7 +326,6 @@ function advanceSlides(n) {
 function showSlidePicture(n) {
   const slides = document.getElementsByClassName('slide-pic');
   const caption = document.getElementById('slide-caption');
-  const reactBtn = document.getElementsByClassName('user-react')[0];
 
   // If not on pics.html document wil not contain any slide elements.
   if (slides.length === 0) {
@@ -345,11 +345,7 @@ function showSlidePicture(n) {
      (newIndex + 1).toString() + '/' + slides.length.toString();
 
   fetchPostReacts(picData[newIndex].id);
-
-  const currReaction = picData[newIndex].reaction;
-  
-  setReactBtn(reactBtn, currReaction.solidIcon, currReaction.text, currReaction.colour);
-  highlightOption(currReaction);
+  fetchUserReact(newIndex);
   
   return newIndex;
 };
@@ -470,17 +466,40 @@ function updatePostReacts(reactCounts) {
 
 /**
  * Fetch reactions on the given post from backend.
- * @param {string} postId - identifier for post.
+ * @param {String} postId - identifier for post.
  */
 function fetchPostReacts(postId) {
-  const postParam = new URLSearchParams();
-  postParam.append('postId', postId);
+  const params = new URLSearchParams();
+  params.append('postId', postId);
 
-  fetch(postReactionsURL + '?' + postParam.toString())
+  fetch(postReactionsURL + '?' + params.toString())
   .then((response) => response.json())
-  .then(data => {
-    updatePostReacts(data.reactCounts);
+  .then((info) => {
+    updatePostReacts(info.reactCounts);
   });
+}
+
+/**
+ * Fetch the user's reaction for the given image.
+ * @param {Number} picIndex - index of the given image.
+ */
+function fetchUserReact(picIndex) {
+  const params = new URLSearchParams();
+  params.append('postId', picData[picIndex].id);
+
+  fetch(userPostReactionURL + '?' + params.toString())
+  .then((response) => response.json())
+  .then((info) => {
+    if (info.loggedIn) {
+      picData[picIndex].reaction = reactMap.get(info.reaction);
+    }
+
+    const reactBtn = document.getElementsByClassName('user-react')[0];
+    const currReaction = picData[picIndex].reaction;
+
+    setReactBtn(reactBtn, currReaction.solidIcon, currReaction.text, currReaction.colour);
+    highlightOption(currReaction);
+  })
 }
 
 /**
@@ -501,7 +520,7 @@ function newPostReaction(newReact) {
     body: data.toString()
   };
 
-  fetch(postReactionsURL, options)
+  fetch(userPostReactionURL, options)
   .then((response) => {
     if (response.status === STATUS_OK) {
       fetchPostReacts(picData[currIndex].id);
