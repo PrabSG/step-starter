@@ -1,7 +1,9 @@
 package com.google.sps.servlets;
 
-import static com.google.sps.utils.ReactionUtils.toReaction;
+import static com.google.sps.utils.ReactionUtils.REACTION_MAP;
 
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
 import com.google.sps.data.Post;
 import com.google.sps.data.ReactionDatastore;
@@ -33,13 +35,18 @@ public class PostReactionsServlet extends HttpServlet {
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    String postId = request.getParameter("postId");
-    String toDecrement = request.getParameter("oldReact");
-    String toIncrement = request.getParameter("newReact");
+    UserService userService = UserServiceFactory.getUserService();
 
-    store.updatePost(postId, toReaction(toDecrement), toReaction(toIncrement));
+    if (userService.isUserLoggedIn()) {
+      String postId = request.getParameter("postId");
+      String toDecrement = request.getParameter("oldReact");
+      String toIncrement = request.getParameter("newReact");
 
-    response.setStatus(HttpServletResponse.SC_OK);
+      store.updatePost(postId, REACTION_MAP.get(toDecrement), REACTION_MAP.get(toIncrement));
+
+      response.setStatus(HttpServletResponse.SC_OK);
+    } else {
+      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+    }
   }
-
 }

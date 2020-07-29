@@ -23,7 +23,8 @@ public class AuthCheckServlet extends HttpServlet {
     if (!userService.isUserLoggedIn()) {
       JsonObject userInfo = new JsonObject();
       userInfo.addProperty("loggedIn", false);
-      userInfo.addProperty("loginURL", userService.createLoginURL("/"));
+      userInfo.addProperty("loginURL",
+          userService.createLoginURL(request.getHeader("referer")));
 
       response.getWriter().println(userInfo.toString());
     } else {

@@ -59,6 +59,14 @@ const reacts = {
   }
 }
 
+const reactMap = new Map([
+  ['none', reacts.none],
+  ['like', reacts.like],
+  ['love', reacts.love],
+  ['wow', reacts.wow],
+  ['laugh', reacts.laugh]
+]);
+
 const picData = [
   {
     id: 'gallery_1',
@@ -119,8 +127,8 @@ function getCommentLimit() {
 
 function initPortfolio() {
   fetch(authCheckURL)
-  .then(response => response.json())
-  .then(info => {
+  .then((response) => response.json())
+  .then((info) => {
     if (info.loggedIn) {
       generateComments();
       addLogoutLink(info.logoutURL);
@@ -211,8 +219,8 @@ function showCommentLogin(loginURL) {
  */
 function getComments() {
   fetch(authCheckURL)
-  .then(response => response.json())
-  .then(info => {
+  .then((response) => response.json())
+  .then((info) => {
     if (info.loggedIn) {
       generateComments();
     } else {
@@ -230,11 +238,11 @@ function deleteAllComments() {
   }
 
   fetch(deleteAllCommentsURL, options)
-    .then((response) => {
-      if (response.status === STATUS_OK) {
-        getComments();
-      }
-    });
+  .then((response) => {
+    if (response.status === STATUS_OK) {
+      getComments();
+    }
+  });
 }
 
 /**
@@ -482,15 +490,10 @@ function fetchPostReacts(postId) {
  */
 function newPostReaction(oldReact, newReact) {
   const data = new URLSearchParams();
+  
   data.append('postId', picData[currIndex].id);
-
-  if (oldReact !== reacts.none) {
-    data.append('oldReact', oldReact.id);
-  }
-
-  if (newReact !== reacts.none) {
-    data.append('newReact', newReact.id);
-  }
+  data.append('oldReact', oldReact.id);
+  data.append('newReact', newReact.id);
 
   const options = {
     headers: {
@@ -513,37 +516,26 @@ function newPostReaction(oldReact, newReact) {
  * @param {string} clickedReact - option clicked by user.
  */
 function toggleReaction(clickedReact) {
-  const reactBtn = document.getElementsByClassName('user-react')[0];
-  
-  let reaction;
-  switch (clickedReact) {
-    case 'like':
-      reaction = reacts.like;
-      break;
-    case 'love':
-      reaction = reacts.love;
-      break;
-    case 'wow':
-      reaction = reacts.wow;
-      break;
-    case 'laugh':
-      reaction = reacts.laugh;
-      break;
-    case 'none':
-      reaction = reacts.none;
-      break;
-    default:
-      reaction = reacts.like;
-      break;
-  }
+  fetch(authCheckURL)
+  .then((response) => response.json())
+  .then((info) => {
+    if (info.loggedIn) {
+      const reactBtn = document.getElementsByClassName('user-react')[0];
+      
+      let reaction = reactMap.get(clickedReact);
+    
+      // If a reaction is clicked again, it will unlike the post.
+      reaction = (picData[currIndex].reaction === reaction) ? reacts.none : reaction;
+    
+      setReactBtn(reactBtn, reaction.solidIcon, reaction.text, reaction.colour);
+      highlightOption(reaction);
+      newPostReaction(picData[currIndex].reaction, reaction);
 
-  // If a reaction is clicked again, it will unlike the post.
-  reaction = (picData[currIndex].reaction === reaction) ? reacts.none : reaction;
-
-  setReactBtn(reactBtn, reaction.solidIcon, reaction.text, reaction.colour);
-  highlightOption(reaction);
-  newPostReaction(picData[currIndex].reaction, reaction);
-  picData[currIndex].reaction = reaction;
+      picData[currIndex].reaction = reaction;
+    } else {
+      window.location.href = info.loginURL;
+    }
+  });
 }
 
 /**
