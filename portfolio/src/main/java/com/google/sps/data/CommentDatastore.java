@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 public class CommentDatastore implements CommentStore {
 
-  private static CommentDatastore instance = new CommentDatastore();
+  private static CommentStore instance = new CommentDatastore();
 
   private DatastoreService datastore;
 
@@ -24,7 +24,7 @@ public class CommentDatastore implements CommentStore {
     this.datastore = DatastoreServiceFactory.getDatastoreService();
   }
 
-  public static CommentDatastore getInstance() {
+  public static CommentStore getInstance() {
     return instance;
   }
 
