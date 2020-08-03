@@ -16,7 +16,6 @@ package com.google.sps;
 
 import static com.google.sps.TimeRange.END_OF_DAY;
 import static com.google.sps.TimeRange.START_OF_DAY;
-import static com.google.sps.TimeRange.fromStartDuration;
 import static com.google.sps.TimeRange.fromStartEnd;
 
 import java.util.Collection;
@@ -29,17 +28,28 @@ public final class FindMeetingQuery {
 
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
     List<TimeRange> busyRanges = new LinkedList<>();
+    List<TimeRange> optionalBusyRanges = new LinkedList<>();
 
     for (Event event : events) {
       if (!Collections.disjoint(event.getAttendees(), request.getAttendees())) {
         addToRanges(busyRanges, event.getWhen());
+        addToRanges(optionalBusyRanges, event.getWhen());
+      } else if(!Collections.disjoint(event.getAttendees(), request.getOptionalAttendees())) {
+        addToRanges(optionalBusyRanges, event.getWhen());
       }
     }
 
-    return extractFreeSlots(busyRanges).stream()
+    List<TimeRange> optionalFreeSlots = extractFreeSlots(optionalBusyRanges).stream()
         .filter(timeRange -> timeRange.duration() >= request.getDuration())
         .collect(Collectors.toList());
 
+    if (optionalFreeSlots.isEmpty()) {
+      return extractFreeSlots(busyRanges).stream()
+          .filter(timeRange -> timeRange.duration() >= request.getDuration())
+          .collect(Collectors.toList());
+    } else {
+      return optionalFreeSlots;
+    }
   }
 
   private List<TimeRange> extractFreeSlots(List<TimeRange> busyRanges) {
@@ -69,24 +79,24 @@ public final class FindMeetingQuery {
       return;
     }
 
-    int nextIndex = 1;
+    int sortedInsertIndex = 0;
 
-    while (nextIndex < ranges.size()) {
-      if (ranges.get(nextIndex).start() >= newRange.start()) {
+    while (sortedInsertIndex < ranges.size()) {
+      if (ranges.get(sortedInsertIndex).start() >= newRange.start()) {
         break;
       }
 
-      nextIndex++;
+      sortedInsertIndex++;
     }
 
-    ranges.add(nextIndex, newRange);
+    ranges.add(sortedInsertIndex, newRange);
 
-    int currIndex = nextIndex - 1;
+    int prevIndex = sortedInsertIndex - 1;
 
-    if (ranges.get(currIndex).overlaps(newRange)) {
-      mergeRanges(ranges, currIndex);
+    if (sortedInsertIndex != 0 && ranges.get(prevIndex).overlaps(newRange)) {
+      mergeRanges(ranges, prevIndex);
     } else {
-      mergeRanges(ranges, nextIndex);
+      mergeRanges(ranges, sortedInsertIndex);
     }
   }
 
@@ -98,7 +108,11 @@ public final class FindMeetingQuery {
     TimeRange currRange = ranges.get(startIndex);
     TimeRange nextRange = ranges.get(startIndex + 1);
 
-    if (currRange.overlaps(nextRange)) {
+    if (currRange.contains(nextRange)) {
+      ranges.remove(startIndex + 1);
+
+      mergeRanges(ranges, startIndex);
+    } else if (currRange.overlaps(nextRange)) {
       TimeRange newRange =
           TimeRange
               .fromStartEnd(currRange.start(), Math.max(currRange.end(), nextRange.end()), false);
