@@ -14,10 +14,14 @@
 
 package com.google.sps.servlets;
 
+import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
+import com.google.sps.data.UserInfoDatastore;
+import com.google.sps.data.UserInfoStore;
 import java.io.IOException;
+import java.util.List;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -35,7 +39,8 @@ public class CommentsServlet extends HttpServlet {
 
   public static final int DEFAULT_COMMENT_LIMIT = 15;
 
-  private CommentStore store = CommentDatastore.getInstance();
+  private CommentStore commentStore = CommentDatastore.getInstance();
+  private UserInfoStore infoStore = UserInfoDatastore.getInstance();
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -55,10 +60,14 @@ public class CommentsServlet extends HttpServlet {
       limit = DEFAULT_COMMENT_LIMIT;
     }
 
+    List<Comment> comments = commentStore.getComments(limit);
+
+    comments.forEach(comment -> comment.setName(infoStore.getNickname(comment.getUserId())));
+
     response.setContentType("application/json;");
 
     Gson gson = new Gson();
-    response.getWriter().println(gson.toJson(store.getComments(limit)));
+    response.getWriter().println(gson.toJson(comments));
   }
 
   @Override
@@ -66,10 +75,10 @@ public class CommentsServlet extends HttpServlet {
     UserService userService = UserServiceFactory.getUserService();
 
     if (userService.isUserLoggedIn()) {
-      String userName = getParameter(request, "name", "Anonymous");
+      String userId = userService.getCurrentUser().getUserId();
       String comment = getParameter(request, "comment", "");
 
-      store.post(new Comment(userName, comment));
+      commentStore.post(comment, userId);
     }
 
     response.sendRedirect("./index.html");
