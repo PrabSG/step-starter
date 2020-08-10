@@ -63,14 +63,6 @@ const reacts = {
   }
 }
 
-const reactMap = new Map([
-  ['none', reacts.none],
-  ['like', reacts.like],
-  ['love', reacts.love],
-  ['wow', reacts.wow],
-  ['laugh', reacts.laugh]
-]);
-
 const picData = [
   {
     id: 'gallery_1',
@@ -549,7 +541,7 @@ function fetchUserReact(picIndex) {
   .then((response) => response.json())
   .then((info) => {
     if (info.loggedIn) {
-      picData[picIndex].reaction = reactMap.get(info.reaction);
+      picData[picIndex].reaction = reacts[info.reaction];
     }
 
     const reactBtn = document.getElementsByClassName('user-react')[0];
@@ -597,7 +589,7 @@ function toggleReaction(clickedReact) {
     if (info.loggedIn) {
       const reactBtn = document.getElementsByClassName('user-react')[0];
       
-      let reaction = reactMap.get(clickedReact);
+      let reaction = reacts[clickedReact];
     
       // If a reaction is clicked again, it will unlike the post.
       reaction = (picData[currIndex].reaction === reaction) ? reacts.none : reaction;
