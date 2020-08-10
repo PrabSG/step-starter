@@ -20,8 +20,106 @@ const nickSetURL = '/nickname/set';
 const nicknameURL = '/nickname.html';
 const getCommentsURL = (limit) => `/comments?limit=${limit}`;
 const deleteAllCommentsURL = '/delete-comments';
+const postReactionsURL = '/posts/reactions';
+const userPostReactionURL = '/posts/user/react';
 
 const STATUS_OK = 200;
+
+const reacts = {
+  none: {
+    id: 'none',
+    solidIcon: 'far fa-thumbs-up',
+    outlineIcon: 'far fa-thumbs-up',
+    text: 'Like',
+    colour: '#9e9e9e'
+  },
+  like: {
+    id: 'like',
+    solidIcon: 'fas fa-thumbs-up',
+    outlineIcon: 'far fa-thumbs-up',
+    text: 'Like',
+    colour: '#0fa3b1'
+  },
+  love: {
+    id: 'love',
+    solidIcon: 'fas fa-heart',
+    outlineIcon: 'far fa-heart',
+    text: 'Love',
+    colour: '#ef5350'
+  },
+  wow: {
+    id: 'wow',
+    solidIcon: 'fas fa-surprise',
+    outlineIcon: 'far fa-surprise',
+    text: 'Wow',
+    colour: '#ffc107'
+  },
+  laugh: {
+    id: 'laugh',
+    solidIcon: 'fas fa-laugh-squint',
+    outlineIcon: 'far fa-laugh-squint',
+    text: 'Haha',
+    colour: '#ffc107'
+  }
+}
+
+const picData = [
+  {
+    id: 'gallery_1',
+    imgSrc: './images/gallery_1.jpeg',
+    caption: 'This was taken outside King\'s College Chapel in Cambridge ' +
+      'last summer. I decided to take a scenic route and accidentally timed ' +
+      'this photo with a cyclist going past.',
+    location: {lat: 52.204, lng: 0.117},
+    mapZoom: 15,
+    reaction: reacts.none
+  },
+  {
+    id: 'gallery_2',
+    imgSrc: './images/gallery_2.jpeg',
+    caption: 'IC A vs Birmingham B in the NHSF National Kabaddi Tournament ' +
+      'earlier this year. I joined Kabaddi at Imperial this year and I am ' +
+      'loving it!',
+    location: {lat: 52.546, lng: -2.052},
+    mapZoom: 12,
+    reaction: reacts.none
+  },
+  {
+    id: 'gallery_3',
+    imgSrc: './images/gallery_3.jpeg',
+    caption: 'A photo of the Marina Bay Sands Hotel in Singapore during one ' +
+      'of its light shows, taken from across the bay.',
+    location: {lat: 1.285, lng: 103.854},
+    mapZoom: 15,
+    reaction: reacts.none
+  },
+  {
+    id: 'gallery_4',
+    imgSrc: './images/gallery_4.jpeg',
+    caption: 'A firebreather in the desert. Taken during a desert safari ' +
+      'and dinner excursion when visiting Dubai.',
+    location: {lat: 25.179, lng: 55.299},
+    mapZoom: 12,
+    reaction: reacts.none
+  },
+  {
+    id: 'gallery_5',
+    imgSrc: './images/gallery_5.jpeg',
+    caption: 'A close-up of a flower in the Flower Dome of the Gardens By ' +
+      'the Bay in Singapore.',
+    location: {lat: 1.284, lng: 103.865},
+    mapZoom: 15,
+    reaction: reacts.none
+  }
+];
+
+let currIndex = 0;
+let currReaction = reacts.none;
+
+function getCommentLimit() {
+  const selector = document.getElementById('commentLimitSelect');
+  return selector.options[selector.selectedIndex].value;
+}
 
 /**
  * Initialise page with initial authentication and subsequent fetches and 
@@ -29,8 +127,8 @@ const STATUS_OK = 200;
  */
 function initPortfolio() {
   fetch(authCheckURL)
-  .then(response => response.json())
-  .then(info => {
+  .then((response) => response.json())
+  .then((info) => {
     if (info.loggedIn) {
       generateComments();
       addLogoutLink(info.logoutURL);
@@ -79,7 +177,7 @@ function generateComments() {
 
   fetch(getCommentsURL(limit))
   .then(response => response.json())
-  .then(comments => {
+  .then((comments) => {
     const section = document.getElementById('commentSection');
 
     // Clear old comments to insert new comments.
@@ -138,8 +236,8 @@ function showCommentLogin(loginURL) {
  */
 function getComments() {
   fetch(authCheckURL)
-  .then(response => response.json())
-  .then(info => {
+  .then((response) => response.json())
+  .then((info) => {
     if (info.loggedIn) {
       generateComments();
     } else {
@@ -157,11 +255,11 @@ function deleteAllComments() {
   }
 
   fetch(deleteAllCommentsURL, options)
-    .then(response => {
-      if (response.status === STATUS_OK) {
-        getComments();
-      }
-    });
+  .then((response) => {
+    if (response.status === STATUS_OK) {
+      getComments();
+    }
+  });
 }
 
 /**
@@ -294,6 +392,9 @@ function showSlidePicture(n) {
   slides[newIndex].getElementsByClassName('slide-counter')[0].innerText =
      (newIndex + 1).toString() + '/' + slides.length.toString();
 
+  fetchPostReacts(picData[newIndex].id);
+  fetchUserReact(newIndex);
+  
   return newIndex;
 };
 
@@ -319,6 +420,204 @@ function circularIndex(n, items) {
 }
 
 /**
+ * Styles main like button to the current reaction styling.
+ */
+function setReactBtn(reactBtn, iconClass, text, colour) {
+  reactBtn.innerHTML = '';
+  reactBtn.style.color = colour;
+
+  const reactIcon = document.createElement('i');
+  reactIcon.className = iconClass;
+
+  const reactText = document.createElement('div');
+  reactText.innerText = text;
+
+  reactBtn.appendChild(reactIcon);
+  reactBtn.appendChild(reactText)
+}
+
+/**
+ * Flip only the selected reaction's icon to be solid colour.
+ * @param reaction - currently selected reaction from react options.
+ */
+function highlightOption(reaction) {
+  const options = document.getElementsByClassName('react-options')[0];
+  const optionIcons = options.getElementsByClassName('fas');
+
+  for (let icon of optionIcons) {
+    icon.className = icon.className.replace('fas', 'far');
+  }
+
+  let highlightIcon;
+
+  switch (reaction) {
+    case reacts.like:
+      highlightIcon = document.getElementById('likeBtn');
+      break;
+    case reacts.love:
+      highlightIcon = document.getElementById('loveBtn');
+      break;
+    case reacts.wow:
+      highlightIcon = document.getElementById('wowBtn');
+      break;
+    case reacts.laugh:
+      highlightIcon = document.getElementById('laughBtn');
+      break;
+    default:
+      return;
+  }
+
+  highlightIcon.className = reaction.solidIcon;
+}
+
+/**
+ * Create HTML elements to display the given reaction and current count.
+ * @param container - Enclosing container to insert into.
+ * @param reaction - Reaction to be shown in this element.
+ * @param {Number} count - Number of reactions of this type to be displayed.
+ */
+function generateReactCounter(container, reaction, count) {
+  const box = document.createElement('div');
+  box.className = 'curr-react';
+  
+  const icon = document.createElement('i');
+  icon.className = reaction.solidIcon;
+  icon.style.color = reaction.colour;
+
+  const countDiv = document.createElement('div');
+  countDiv.innerText = count.toString();
+
+  box.appendChild(icon);
+  box.appendChild(countDiv);
+  container.appendChild(box);
+}
+
+/**
+ * Generate reaction icons and counters for current post.
+ * @param reactCounts - current counts for each reaction.
+ */
+function updatePostReacts(reactCounts) {
+  const reactCounter = document.getElementsByClassName("reacts-container")[0];
+  reactCounter.innerHTML = '';
+
+  if (reactCounts.LIKE > 0) {
+    generateReactCounter(reactCounter, reacts.like, reactCounts.LIKE);
+  }
+  if (reactCounts.LOVE > 0) {
+    generateReactCounter(reactCounter, reacts.love, reactCounts.LOVE);
+  }
+  if (reactCounts.WOW > 0) {
+    generateReactCounter(reactCounter, reacts.wow, reactCounts.WOW);
+  }
+  if (reactCounts.LAUGH > 0) {
+    generateReactCounter(reactCounter, reacts.laugh, reactCounts.LAUGH);
+  }
+}
+
+/**
+ * Fetch reactions on the given post from backend.
+ * @param {String} postId - identifier for post.
+ */
+function fetchPostReacts(postId) {
+  const params = new URLSearchParams();
+  params.append('postId', postId);
+
+  fetch(postReactionsURL + '?' + params.toString())
+  .then((response) => response.json())
+  .then((info) => {
+    updatePostReacts(info.reactCounts);
+  });
+}
+
+/**
+ * Fetch the user's reaction for the given image.
+ * @param {Number} picIndex - index of the given image.
+ */
+function fetchUserReact(picIndex) {
+  const params = new URLSearchParams();
+  params.append('postId', picData[picIndex].id);
+
+  fetch(userPostReactionURL + '?' + params.toString())
+  .then((response) => response.json())
+  .then((info) => {
+    if (info.loggedIn) {
+      picData[picIndex].reaction = reacts[info.reaction];
+    }
+
+    const reactBtn = document.getElementsByClassName('user-react')[0];
+    const currReaction = picData[picIndex].reaction;
+
+    setReactBtn(reactBtn, currReaction.solidIcon, currReaction.text, currReaction.colour);
+    highlightOption(currReaction);
+  })
+}
+
+/**
+ * Function to update the reactions on the post on backend.
+ * @param newReact - new reaction current user now selected.
+ */
+function newPostReaction(newReact) {
+  const data = new URLSearchParams();
+  
+  data.append('postId', picData[currIndex].id);
+  data.append('newReact', newReact.id);
+
+  const options = {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    method: 'POST',
+    body: data.toString()
+  };
+
+  fetch(userPostReactionURL, options)
+  .then((response) => {
+    if (response.status === STATUS_OK) {
+      fetchPostReacts(picData[currIndex].id);
+    }
+  });
+}
+
+/**
+ * Toggle reaction of clicked option, reverting to none if already clicked.
+ * @param {string} clickedReact - option clicked by user.
+ */
+function toggleReaction(clickedReact) {
+  fetch(authCheckURL)
+  .then((response) => response.json())
+  .then((info) => {
+    if (info.loggedIn) {
+      const reactBtn = document.getElementsByClassName('user-react')[0];
+      
+      let reaction = reacts[clickedReact];
+    
+      // If a reaction is clicked again, it will unlike the post.
+      reaction = (picData[currIndex].reaction === reaction) ? reacts.none : reaction;
+    
+      setReactBtn(reactBtn, reaction.solidIcon, reaction.text, reaction.colour);
+      highlightOption(reaction);
+      newPostReaction(reaction);
+
+      picData[currIndex].reaction = reaction;
+    } else {
+      window.location.href = info.loginURL;
+    }
+  });
+}
+
+/**
+ * Handle logic of main like button to remove existing like when clicked,
+ * but default to like on a click with no previous reaction.
+ */
+function toggleLike() {
+  if (picData[currIndex].reaction === reacts.none) {
+    toggleReaction('like');
+  } else {
+    toggleReaction('none');
+  }
+}
+
+/**
  * Initialise map for currently displayed image.
  */
 function initMap() {
@@ -332,45 +631,5 @@ function initMap() {
   );
 }
 
-const picData = [
-  {
-    imgSrc: './images/gallery_1.jpeg',
-    caption: 'This was taken outside King\'s College Chapel in Cambridge ' +
-      'last summer. I decided to take a scenic route and accidentally timed ' +
-      'this photo with a cyclist going past.',
-    location: {lat: 52.204, lng: 0.117},
-    mapZoom: 15
-  },
-  {
-    imgSrc: './images/gallery_2.jpeg',
-    caption: 'IC A vs Birmingham B in the NHSF National Kabaddi Tournament ' +
-      'earlier this year. I joined Kabaddi at Imperial this year and I am ' +
-      'loving it!',
-    location: {lat: 52.546, lng: -2.052},
-    mapZoom: 12
-  },
-  {
-    imgSrc: './images/gallery_3.jpeg',
-    caption: 'A photo of the Marina Bay Sands Hotel in Singapore during one ' +
-      'of its light shows, taken from across the bay.',
-    location: {lat: 1.285, lng: 103.854},
-    mapZoom: 15
-  },
-  {
-    imgSrc: './images/gallery_4.jpeg',
-    caption: 'A firebreather in the desert. Taken during a desert safari ' +
-      'and dinner excursion when visiting Dubai.',
-    location: {lat: 25.179, lng: 55.299},
-    mapZoom: 12
-  },
-  {
-    imgSrc: './images/gallery_5.jpeg',
-    caption: 'A close-up of a flower in the Flower Dome of the Gardens By ' +
-      'the Bay in Singapore.',
-    location: {lat: 1.284, lng: 103.865},
-    mapZoom: 15
-  }
-];
-
 setGalleryImages();
-let currIndex = showSlidePicture(0);
+currIndex = showSlidePicture(0);
